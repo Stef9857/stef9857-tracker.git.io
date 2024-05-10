@@ -21,6 +21,7 @@
   "author": "Stephanie Fu",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "sass": "^1.77.0"
   }
 }
