@@ -1,0 +1,22 @@
+{
+  "name": "stef9857-tracker.git.io",
+  "version": "1.0.0",
+  "description": "DECO2017 Calorie Tracker Web Application ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "stef9857-tracker.git.io"
+  },
+  "keywords": [
+    "DECO2017",
+    "Calorie",
+    "Tracker",
+    "Web",
+    "App"
+  ],
+  "author": "Stephanie Fu",
+  "license": "ISC"
+}
