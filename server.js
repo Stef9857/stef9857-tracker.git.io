@@ -14,5 +14,6 @@ let server = app.listen(8888, function () {
 
 app.use(express.static(__dirname + '/dist'));
 
-res.sendFile(__dirname + '/dist/index.html')
-
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/dist/index.html')
+})
