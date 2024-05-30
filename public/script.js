@@ -1,19 +1,45 @@
 let ingredientsList = []; // initialised here because it is used in multiple scopes
 
+function updateExistingCategories() {
+    let existingCategoriesSelect = document.getElementById("existing-categories");
+    existingCategoriesSelect.innerHTML = ""; // clear previous options 
+
+    let existingCategories = JSON.parse(localStorage.getItem('existingCategories'));
+    
+    if (!existingCategories) {
+        existingCategories = [];
+    };
+    localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
+
+    if(existingCategories) {
+    existingCategories.forEach(category => {
+        let option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        existingCategoriesSelect.appendChild(option)
+        });
+    }
+    console.log('test');
+}
+
+updateExistingCategories();
+
 document.getElementById("ing-form").addEventListener("submit", function (event) {
     event.preventDefault(); // used to stop the page from reloading
 
     // getting the values from the user's input into the relevant form field
     var name = document.getElementById("ing-name").value;
     var kcalCount = document.getElementById("ing-kcal-count").value;
+    var category = document.getElementById("ing-category").value;
 
     // creating an object with ingredient name and kcal count to store the values together
     var ingredient = {
         ingredientName: name,
-        ingredientKcalCount: kcalCount
+        ingredientKcalCount: kcalCount,
+        ingredientCategory: category
     };
 
-    console.log(ingredient.ingredientName, ingredient.ingredientKcalCount);
+    // console.log(ingredient.ingredientName, ingredient.ingredientKcalCount);
 
     // get the stored ingredients list from local storage
     ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
@@ -34,6 +60,16 @@ document.getElementById("ing-form").addEventListener("submit", function (event) 
     }
     console.log(ingredientsList);
     
+    if(!category) {
+        return;
+    }
+
+    let existingCategories = JSON.parse(localStorage.getItem('existingCategories'));
+    if (existingCategories && Array.isArray(existingCategories) && !existingCategories.includes(category)) {
+        existingCategories.push(category);
+        localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
+        updateExistingCategories();
+    }
     // save the current ingredients list to localStorage and convert it to JSON format for storage
     localStorage.setItem('ingredientsList', JSON.stringify(ingredientsList));
     updateIngredientsList();
@@ -55,10 +91,10 @@ function updateIngredientsList() {
 
     // select the list element and clear it's content
     let list = document.querySelector(".ingredients-list ul");
-    list.innerHTML = "";
-  
+    list.innerHTML = "";    
+
     // retrieve the ingredients list from localStorage
-    let ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
+    ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
   
     // make sure the localStorage item exists by checking it's not equal to 'null'
     if (ingredientsList !== null){
@@ -66,9 +102,10 @@ function updateIngredientsList() {
       // Loop through the ingredients list and add their names as list items to the page
       ingredientsList.forEach((ingredient) => {
         let listItem = document.createElement("li");
-        listItem.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal`;
+        listItem.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
         list.appendChild(listItem);
       })
     } 
   };
 
+  updateIngredientsList();
