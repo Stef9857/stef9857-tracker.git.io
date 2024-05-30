@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="scss/main.scss">
 </head>
 <body>
-    <h1>Yay! It worked</h1>
-    Generic message
+
+    <div class="ingredients-form">
+        <form id="ing-form">
+            <label for="ing-name">Ingredient Name</label><br>
+            <input type="text" id="ing-name" name="ingredientName"><br>
+            <label for="ing-kcal-count">Kcal count</label><br>
+            <input type="number" id="ing-kcal-count" name="ingredientKcalCount"><br>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+
+    <div class="ingredients-list">
+        <h2>Ingredients Lists</h2>
+        <ul>
+            <!-- keep empty -->
+        </ul>
+        <button id="clear">Clear Ingredients List</button>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
