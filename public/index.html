@@ -90,17 +90,17 @@
                 <form id="ingredient-form">
                     <!-- Ingredient name -->
                     <label for="ingredient-name">Ingredient Name</label><br>
-                    <input type="text" id="ingredient-name" name="ingredientName"><br>
+                    <input type="text" id="ingredient-name" name="ingredientName" required><label id="ingredient-name-error"></label><br>
                     <!-- Ingredient kcal count -->
                     <label for="ingredient-kcal-count">Kcal count</label><br>
-                    <input type="number" id="ingredient-kcal-count" name="ingredientKcalCount"><br>
+                    <input type="number" id="ingredient-kcal-count" name="ingredientKcalCount" min="0" required><br>
                     <!-- New ingredient category -->
                     <label for="ingredient-category">Ingredient Category</label><br>
-                    <input type="text" id="ingredient-category">
                     <!-- Select from existing ingredient category -->
                     <select id="existing-ingredient-categories">
                         <!-- existing categories will be added dynamically -->
                     </select>
+                    <input type="text" id="ingredient-category" placeholder="New Category">
                     <!-- Create button -->
                     <button type="submit">Create</button>
                 </form>

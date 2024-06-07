@@ -1,16 +1,23 @@
 // create ingredients list
 let ingredientsList = []; // initialised here because it is used in multiple scopes
 
-function updateExistingCategories() {
-    let existingCategoriesSelect = document.getElementById("existing-ingredient-categories");
-    existingCategoriesSelect.innerHTML = ""; // clear previous options 
-
-    // the || [] is used to assign an empty array as a default value if the variable is empty 
+function updateExistingCategories(category = null) {
+    // load existing categories from localStorage
     let existingCategories = JSON.parse(localStorage.getItem('existingCategories')) || [];
 
-    localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
+    // add category if it doesn't already exist
+    if (category && !existingCategories.includes(category)) {
+        existingCategories.push(category);
+        localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
+    }
 
+    // update the dropdown
     if (existingCategories) {
+        // clear dropdown
+        let existingCategoriesSelect = document.getElementById("existing-ingredient-categories");
+        existingCategoriesSelect.innerHTML = "";
+
+        // populate dropdown
         existingCategories.forEach(category => {
             let option = document.createElement("option");
             option.value = category;
@@ -18,7 +25,6 @@ function updateExistingCategories() {
             existingCategoriesSelect.appendChild(option)
         });
     }
-    console.log('test');
 }
 
 updateExistingCategories();
@@ -30,20 +36,19 @@ updateExistingCategories();
 document.getElementById("ingredient-form").addEventListener("submit", function (event) {
     event.preventDefault(); // used to stop the page from reloading
 
+    document.getElementById("ingredient-name-error").innerHTML = ''; // clear error message
+
     // getting the values from the user's input into the relevant form field
     let name = document.getElementById("ingredient-name").value;
     let kcalCountInput = document.getElementById("ingredient-kcal-count").value;
-    // check if kcalCountInput is a valid number
-    if (isNaN(kcalCountInput)) {
-        // display error message if the number is not valid
-        console.error("invalid input for kcal count");
-        return;
-    }
-    
+
     // https://www.w3schools.com/jsref/jsref_parsefloat.asp 
     // parseFloat used to ensure that the number is not treated as a string - necessary for kcal calculations later
     let kcalCount = parseFloat(kcalCountInput);
     let category = document.getElementById("ingredient-category").value;
+    if (!category) {
+        category = document.getElementById("existing-ingredient-categories").value;
+    }
 
     // creating an object with ingredient name and kcal count to store the values together
     let ingredient = {
@@ -51,8 +56,6 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
         ingredientKcalCount: kcalCount,
         ingredientCategory: category
     };
-
-    addIngredient(ingredient); // add ingredient to the selected ingredients list in the recipe form
 
     // get the stored ingredients list from local storage
     ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
@@ -65,7 +68,7 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
     } else {
         // log that a duplicate ingredient has been created
         if (ingredientsList.find(element => element.ingredientName === ingredient.ingredientName)) {
-            console.log('Ingredient already exists');
+            document.getElementById("ingredient-name-error").innerHTML = 'Ingredient already exists';
         } else {
             // else (i.e. if the ingredient has not been created before) add ingredient to array
             ingredientsList.push(ingredient);
@@ -73,16 +76,8 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
     }
     console.log(ingredientsList);
 
-    if (!category) {
-        return;
-    }
+    updateExistingCategories(category);
 
-    let existingCategories = JSON.parse(localStorage.getItem('existingCategories'));
-    if (existingCategories && Array.isArray(existingCategories) && !existingCategories.includes(category)) {
-        existingCategories.push(category);
-        localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
-        updateExistingCategories();
-    }
     // save the current ingredients list to localStorage and convert it to JSON format for storage
     localStorage.setItem('ingredientsList', JSON.stringify(ingredientsList));
     updateIngredientsList();
@@ -164,16 +159,16 @@ document.getElementById("recipe-form").addEventListener("submit", function (even
         totalKcalCount: totalKcalCount
     };
 
-// store the recipe object in localStorage for users to be able to access in the future 
-let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
-recipesList.push(recipe);
-localStorage.setItem('recipesList', JSON.stringify(recipesList));
+    // store the recipe object in localStorage for users to be able to access in the future 
+    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
+    recipesList.push(recipe);
+    localStorage.setItem('recipesList', JSON.stringify(recipesList));
 
-// clear the form after a recipe has been created for an easier user experience
-document.getElementById("recipe-name").value = "";
-document.getElementById("selected-ingredients").selectedIndex = -1;
+    // clear the form after a recipe has been created for an easier user experience
+    document.getElementById("recipe-name").value = "";
+    document.getElementById("selected-ingredients").selectedIndex = -1;
 
-updateRecipesList();
+    updateRecipesList();
 });
 
 function updateRecipesList() {
@@ -218,7 +213,7 @@ clearButtonRecipes.addEventListener("click", function () {
 // Create Meal
 //
 
-document.getElementById("meal-form").addEventListener("submit", function(event){
+document.getElementById("meal-form").addEventListener("submit", function (event) {
     event.preventDefault();
 
     // get values from user input
@@ -226,7 +221,7 @@ document.getElementById("meal-form").addEventListener("submit", function(event){
     let mealDate = document.getElementById("meal-date").value;
     let mealTime = document.getElementById("meal-time").value;
     let selectedRecipes = Array.from(document.getElementById("selected-recipes").selectedOptions).map(option => option.value);
-    
+
     // calculate kcal count for the meal
     let totalMealKcount = calculateMealKcal(selectedRecipes, JSON.parse(localStorage.getItem('recipesList')) || []);
 
@@ -256,13 +251,13 @@ document.getElementById("meal-form").addEventListener("submit", function(event){
 
 updateMealsList();
 
-function populateRecipesList(){
+function populateRecipesList() {
     let selectedRecipesSelect = document.getElementById("selected-recipes");
-    selectedRecipesSelect.innerHTML = ""; 
+    selectedRecipesSelect.innerHTML = "";
 
     let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
 
-    recipesList.forEach(function(recipe){
+    recipesList.forEach(function (recipe) {
         let option = document.createElement("option");
         option.value = recipe.recipeName;
         option.textContent = recipe.recipeName;
@@ -314,19 +309,19 @@ function calculateTotalKcalToday() {
     let currentDate = new Date().toISOString().split('T', 1)[0];
     let totalKcalToday = 0;
 
-    mealsList.forEach(function(meal){
+    mealsList.forEach(function (meal) {
         if (meal.mealDate === currentDate) {
             totalKcalToday += meal.totalMealKcount;
         }
     })
 
-    return totalKcalToday; 
+    return totalKcalToday;
 }
 
 function updateTotalKcalToday() {
     let totalKcalTodayElement = document.getElementById('total-kcal-today');
     let totalKcalToday = calculateTotalKcalToday();
-    totalKcalTodayElement.textContent = `${totalKcalToday}`; 
+    totalKcalTodayElement.textContent = `${totalKcalToday}`;
 }
 
 updateTotalKcalToday();
