@@ -4,98 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calolog</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <button onclick="toggleVisibility('meal-form')">Create Meal</button>
-    <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
-    <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
+    <div class="container">
+        <div class="header">
 
-    <div id="meal-form" class="hidden">
-        <h2>Create Meal</h2>
-        <form id="meal-form">
-            <!-- Meal name -->
-            <label for="meal-name">Meal Name</label><br>
-            <input type="text" id="meal-name" name="mealName"><br>
-            <!-- Date -->
-            <label for="meal-date">Date</label><br>
-            <input type="date" id="meal-date" name="mealDate"><br>
-            <!-- Time -->
-            <label for="meal-time">Time</label><br>
-            <input type="time" id="meal-time" name="mealTime"><br>
-            <!-- Select recipes -->
-            <label for="selected-recipes">Select Recipes</label><br>
-            <select id="selected-recipes" multiple>
-                <!-- options will be added dynamically -->
-            </select><br>
-            <button type="submit">Create Meal</button>
-        </form>
-
-        <!-- display total calorie count -->
-        <div class="meals-list">
-            <h2>Meals List</h2>
-            <ul>
-                <!-- Meals will be added dynamically -->
-            </ul>
-            <button id="clear-meals-list">Clear Meals List</button>
         </div>
-    </div>
 
-    <div id="recipe-form" class="hidden">
-        <h2>Create Recipe</h2>
-        <form id="recipe-form">
-            <!-- Recipe name -->
-            <label for="recipe-name">Recipe Name</label><br>
-            <input type="text" id="recipe-name" name="recipeName"><br>
-            <!-- Select ingredients name -->
-            <label for="selected-ingredients">Select Ingredients</label><br>
-            <select id="selected-ingredients" multiple>
-                <!-- options will be added dynamically -->
-            </select><br>
-
-            <button type="submit">Create Recipe</button>
-        </form>
-
-        <div class="recipes-list">
-            <h2>Recipes List</h2>
-            <ul>
-                <!-- recipes will be added dynamically -->
-            </ul>
-            <button id="clear-recipes-list">Clear Recipes List</button>
+        <div class="kcal-total">
+            <h1>Number</h1>
+            <p>calories consumed today</p>
         </div>
-    </div>
 
-    <div id="ingredients-form" class="hidden">
-        <h2>Create Ingredient</h2>
-        <form id="ingredient-form">
-            <!-- Ingredient name -->
-            <label for="ingredient-name">Ingredient Name</label><br>
-            <input type="text" id="ingredient-name" name="ingredientName"><br>
-            <!-- Ingredient kcal count -->
-            <label for="ingredient-kcal-count">Kcal count</label><br>
-            <input type="number" id="ingredient-kcal-count" name="ingredientKcalCount"><br>
-            <!-- New ingredient category -->
-            <label for="ingredient-category">Ingredient Category</label><br>
-            <input type="text" id="ingredient-category">
-            <!-- Select from existing ingredient category -->
-            <select id="existing-ingredient-categories">
-                <!-- existing categories will be added dynamically -->
-            </select>
-            <!-- Create button -->
-            <button type="submit">Create</button>
-        </form>
-
-        <div class="ingredients-list">
-            <h2>Ingredients List</h2>
-            <ul>
-                <!-- ingredients will be added dynamically -->
-            </ul>
-            <button id="clear-ingredients-list">Clear Ingredients List</button>
+        <div class="history">
+            <h2>Meal History</h2>
         </div>
-    </div>
+
+        <div class="meals-recipes-ingredients">
+            <button onclick="toggleVisibility('meal-form')">Create Meal</button>
+            <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
+            <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
+        
+            <div id="meal-form" class="hidden">
+                <h2>Create Meal</h2>
+                <form id="meal-form">
+                    <!-- Meal name -->
+                    <label for="meal-name">Meal Name</label><br>
+                    <input type="text" id="meal-name" name="mealName"><br>
+                    <!-- Date -->
+                    <label for="meal-date">Date</label><br>
+                    <input type="date" id="meal-date" name="mealDate"><br>
+                    <!-- Time -->
+                    <label for="meal-time">Time</label><br>
+                    <input type="time" id="meal-time" name="mealTime"><br>
+                    <!-- Select recipes -->
+                    <label for="selected-recipes">Select Recipes</label><br>
+                    <select id="selected-recipes" multiple>
+                        <!-- options will be added dynamically -->
+                    </select><br>
+                    <button type="submit">Create Meal</button>
+                </form>
+        
+                <!-- display total calorie count -->
+                <div class="meals-list">
+                    <h2>Meals List</h2>
+                    <ul>
+                        <!-- Meals will be added dynamically -->
+                    </ul>
+                    <button id="clear-meals-list">Clear Meals List</button>
+                </div>
+            </div>
+        
+            <div id="recipe-form" class="hidden">
+                <h2>Create Recipe</h2>
+                <form id="recipe-form">
+                    <!-- Recipe name -->
+                    <label for="recipe-name">Recipe Name</label><br>
+                    <input type="text" id="recipe-name" name="recipeName"><br>
+                    <!-- Select ingredients name -->
+                    <label for="selected-ingredients">Select Ingredients</label><br>
+                    <select id="selected-ingredients" multiple>
+                        <!-- options will be added dynamically -->
+                    </select><br>
+        
+                    <button type="submit">Create Recipe</button>
+                </form>
+        
+                <div class="recipes-list">
+                    <h2>Recipes List</h2>
+                    <ul>
+                        <!-- recipes will be added dynamically -->
+                    </ul>
+                    <button id="clear-recipes-list">Clear Recipes List</button>
+                </div>
+            </div>
+        
+            <div id="ingredients-form" class="hidden">
+                <h2>Create Ingredient</h2>
+                <form id="ingredient-form">
+                    <!-- Ingredient name -->
+                    <label for="ingredient-name">Ingredient Name</label><br>
+                    <input type="text" id="ingredient-name" name="ingredientName"><br>
+                    <!-- Ingredient kcal count -->
+                    <label for="ingredient-kcal-count">Kcal count</label><br>
+                    <input type="number" id="ingredient-kcal-count" name="ingredientKcalCount"><br>
+                    <!-- New ingredient category -->
+                    <label for="ingredient-category">Ingredient Category</label><br>
+                    <input type="text" id="ingredient-category">
+                    <!-- Select from existing ingredient category -->
+                    <select id="existing-ingredient-categories">
+                        <!-- existing categories will be added dynamically -->
+                    </select>
+                    <!-- Create button -->
+                    <button type="submit">Create</button>
+                </form>
+        
+                <div class="ingredients-list">
+                    <h2>Ingredients List</h2>
+                    <ul>
+                        <!-- ingredients will be added dynamically -->
+                    </ul>
+                    <button id="clear-ingredients-list">Clear Ingredients List</button>
+                </div>
+            </div>
+        </div>
+      </div>
 
     <script src="script.js"></script>
 </body>

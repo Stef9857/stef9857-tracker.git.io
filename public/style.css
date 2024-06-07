@@ -1,3 +1,33 @@
+body {
+    width: 100vw; 
+    height: 100vh; 
+    margin: 0; 
+    padding: 0; 
+}
+
 .hidden {
     display: none;
 }
+
+.container {  display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: 10% 45% 45%;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "header header"
+      "kcal-total meals-recipes-ingredients"
+      "history meals-recipes-ingredients";
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .kcal-total { grid-area: kcal-total; }
+  
+  .history { grid-area: history; }
+  
+  .meals-recipes-ingredients { grid-area: meals-recipes-ingredients; }
+  
+  .header { grid-area: header; }
+  
+  
