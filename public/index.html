@@ -15,7 +15,33 @@
     <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
 
     <div id="meal-form" class="hidden">
-        <p>Create Meal</p>
+        <h2>Create Meal</h2>
+        <form id="meal-form">
+            <!-- Meal name -->
+            <label for="meal-name">Meal Name</label><br>
+            <input type="text" id="meal-name" name="mealName"><br>
+            <!-- Date -->
+            <label for="meal-date">Date</label><br>
+            <input type="date" id="meal-date" name="mealDate"><br>
+            <!-- Time -->
+            <label for="meal-time">Time</label><br>
+            <input type="time" id="meal-time" name="mealTime"><br>
+            <!-- Select recipes -->
+            <label for="selected-recipes">Select Recipes</label><br>
+            <select id="selected-recipes" multiple>
+                <!-- options will be added dynamically -->
+            </select><br>
+            <button type="submit">Create Meal</button>
+        </form>
+
+        <!-- display total calorie count -->
+        <div class="meals-list">
+            <h2>Meals List</h2>
+            <ul>
+                <!-- Meals will be added dynamically -->
+            </ul>
+            <button id="clear-meals-list">Clear Meals List</button>
+        </div>
     </div>
 
     <div id="recipe-form" class="hidden">
