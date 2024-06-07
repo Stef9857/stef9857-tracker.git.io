@@ -1,14 +1,13 @@
+// create ingredients list
 let ingredientsList = []; // initialised here because it is used in multiple scopes
 
 function updateExistingCategories() {
-    let existingCategoriesSelect = document.getElementById("existing-categories");
+    let existingCategoriesSelect = document.getElementById("existing-ingredient-categories");
     existingCategoriesSelect.innerHTML = ""; // clear previous options 
 
-    let existingCategories = JSON.parse(localStorage.getItem('existingCategories'));
+    // the || [] is used to assign an empty array as a default value if the variable is empty 
+    let existingCategories = JSON.parse(localStorage.getItem('existingCategories')) || [];
 
-    if (!existingCategories) {
-        existingCategories = [];
-    };
     localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
 
     if (existingCategories) {
@@ -24,13 +23,15 @@ function updateExistingCategories() {
 
 updateExistingCategories();
 
-document.getElementById("ing-form").addEventListener("submit", function (event) {
+document.getElementById("ingredient-form").addEventListener("submit", function (event) {
     event.preventDefault(); // used to stop the page from reloading
 
     // getting the values from the user's input into the relevant form field
-    var name = document.getElementById("ing-name").value;
-    var kcalCount = document.getElementById("ing-kcal-count").value;
-    var category = document.getElementById("ing-category").value;
+    var name = document.getElementById("ingredient-name").value;
+    // https://www.w3schools.com/jsref/jsref_parsefloat.asp 
+    // parseFloat used to ensure that the number is not treated as a string - necessary for kcal calculations later
+    var kcalCount = parseFloat(document.getElementById("ingredient-kcal-count").value);
+    var category = document.getElementById("ingredient-category").value;
 
     // creating an object with ingredient name and kcal count to store the values together
     var ingredient = {
@@ -76,9 +77,9 @@ document.getElementById("ing-form").addEventListener("submit", function (event) 
 });
 
 
-// set up the functionality for clearing the localStorage favourites
-let clearButton = document.getElementById("clear");
-clearButton.addEventListener("click", function () {
+// set up the functionality for clearing the ingredients list from localStorage 
+let clearButtonIngredients = document.getElementById("clear-ingredients-list");
+clearButtonIngredients.addEventListener("click", function () {
     localStorage.removeItem('ingredientsList');
     ingredientsList = [];
     console.log(ingredientsList);
@@ -120,3 +121,84 @@ function toggleVisibility(divId) {
         div.style.display = "none";
     }
 }
+
+// create recipe
+
+populateIngredientsList();
+
+document.getElementById("recipe-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // get values from user input
+    let recipeName = document.getElementById("recipe-name").value;
+    let selectedIngredients = [];
+    let totalKcalCount = 0; // initialise total kcal counter
+
+    let selectedOptions = document.querySelectorAll("#selected-ingredients option:checked");
+    console.log(selectedOptions);
+    selectedOptions.forEach(function(option) {
+        let kcal = parseFloat(option.dataset.kcal); // Retrieve kcal value from dataset 
+        selectedIngredients.push({
+            name: option.value,
+            kcal: kcal // Store kcal value for each selected ingredient
+        });
+        totalKcalCount += kcal; // Add kcal value to total calories counter
+        console.log("Total Kcal Count:", totalKcalCount);
+    });
+
+    // object to store the recipe details
+    let recipe = {
+        recipeName: recipeName,
+        ingredients: selectedIngredients,
+        totalKcalCount: totalKcalCount 
+    };
+
+    // store the recipe object in localStorage for users to be able to access in the future 
+    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
+    recipesList.push(recipe);
+    localStorage.setItem('recipesList', JSON.stringify(recipesList));
+
+    // clear the form after a recipe has been created for an easier user experience
+    document.getElementById("recipe-name").value = "";
+    document.getElementById("selected-ingredients").selectedIndex = -1;
+
+    updateRecipesList();
+});
+
+function updateRecipesList() {
+    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
+    let listElement = document.querySelector(".recipes-list ul");
+    listElement.innerHTML = ""; // clear existing list for re-population to ensure the most up-to-date list is being displayed
+
+    if (recipesList) {
+        recipesList.forEach(function(recipe) {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${recipe.recipeName}: ${recipe.ingredients.map(ingredient => ingredient.name).join(", ")} - Total Calories: ${recipe.totalKcalCount} kcal`;
+            listElement.appendChild(listItem);
+        });
+    }
+}
+
+updateRecipesList();
+
+function populateIngredientsList() {
+    let selectedIngredientsSelect = document.getElementById("selected-ingredients");
+    selectedIngredientsSelect.innerHTML = ""; // clear previous options
+
+    let ingredientsList = JSON.parse(localStorage.getItem('ingredientsList')) || [];
+
+    ingredientsList.forEach(function (ingredient) {
+        let option = document.createElement("option");
+        option.value = ingredient.ingredientName;
+        option.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
+        option.dataset.kcal = ingredient.ingredientKcalCount; // Set data-kcal attribute
+        selectedIngredientsSelect.appendChild(option);
+    })
+}
+
+// set up the functionality for clearing the recipes list from localStorage 
+let clearButtonRecipes = document.getElementById("clear-recipes-list");
+clearButtonRecipes.addEventListener("click", function () {
+    localStorage.removeItem('recipesList');
+    updateRecipesList(); // Re-fetch and update the list from localStorage
+});

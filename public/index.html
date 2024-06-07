@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <button onclick="toggleVisibility('meal-form')">Create Meal</button>
@@ -17,22 +19,43 @@
     </div>
 
     <div id="recipe-form" class="hidden">
-        <p>Create Recipe</p>
+        <h2>Create Recipe</h2>
+        <form id="recipe-form">
+            <!-- Recipe name -->
+            <label for="recipe-name">Recipe Name</label><br>
+            <input type="text" id="recipe-name" name="recipeName"><br>
+            <!-- Select ingredients name -->
+            <label for="selected-ingredients">Select Ingredients</label><br>
+            <select id="selected-ingredients" multiple>
+                <!-- options will be added dynamically -->
+            </select><br>
+
+            <button type="submit">Create Recipe</button>
+        </form>
+
+        <div class="recipes-list">
+            <h2>Recipes List</h2>
+            <ul>
+                <!-- recipes will be added dynamically -->
+            </ul>
+            <button id="clear-recipes-list">Clear Recipes List</button>
+        </div>
     </div>
 
     <div id="ingredients-form" class="hidden">
-        <form id="ing-form">
+        <h2>Create Ingredient</h2>
+        <form id="ingredient-form">
             <!-- Ingredient name -->
-            <label for="ing-name">Ingredient Name</label><br>
-            <input type="text" id="ing-name" name="ingredientName"><br>
+            <label for="ingredient-name">Ingredient Name</label><br>
+            <input type="text" id="ingredient-name" name="ingredientName"><br>
             <!-- Ingredient kcal count -->
-            <label for="ing-kcal-count">Kcal count</label><br>
-            <input type="number" id="ing-kcal-count" name="ingredientKcalCount"><br>
+            <label for="ingredient-kcal-count">Kcal count</label><br>
+            <input type="number" id="ingredient-kcal-count" name="ingredientKcalCount"><br>
             <!-- New ingredient category -->
-            <label for="ing-category">Ingredient Category</label><br>
-            <input type="text" id="ing-category">
+            <label for="ingredient-category">Ingredient Category</label><br>
+            <input type="text" id="ingredient-category">
             <!-- Select from existing ingredient category -->
-            <select id="existing-categories">
+            <select id="existing-ingredient-categories">
                 <!-- existing categories will be added dynamically -->
             </select>
             <!-- Create button -->
@@ -44,10 +67,11 @@
             <ul>
                 <!-- ingredients will be added dynamically -->
             </ul>
-            <button id="clear">Clear Ingredients List</button>
+            <button id="clear-ingredients-list">Clear Ingredients List</button>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
