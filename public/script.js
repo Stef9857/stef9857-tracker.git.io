@@ -1,3 +1,6 @@
+// create global lists
+let ingredientsList = [];
+
 /*
  * navigation tabs in configuration section
  */
@@ -32,9 +35,6 @@ document.getElementById("tab-ingredients-form").addEventListener("click", clickT
 // select default tab
 document.getElementById("tab-meal-form").click();
 
-// create ingredients list
-let ingredientsList = []; 
-
 function updateExistingCategories(category = null) {
     // load existing categories from localStorage
     let existingCategories = JSON.parse(localStorage.getItem('existingCategories')) || [];
@@ -60,9 +60,6 @@ function updateExistingCategories(category = null) {
         });
     }
 }
-
-// initial load of ingredient categories 
-updateExistingCategories();
 
 //
 // Create ingredient
@@ -150,8 +147,6 @@ function updateIngredientsList() {
     }
 };
 
-updateIngredientsList();
-
 // toggleVisibility function - used to show and hide the Create Meal, Recipe and Ingredient divs
 // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
 function toggleVisibility(divId) {
@@ -166,8 +161,6 @@ function toggleVisibility(divId) {
 //
 // Create Recipe
 //
-
-populateIngredientsList();
 
 document.getElementById("recipe-form").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -219,8 +212,6 @@ function updateRecipesList() {
     }
 }
 
-updateRecipesList();
-
 function populateIngredientsList() {
     let selectedIngredientsSelect = document.getElementById("selected-ingredients");
     selectedIngredientsSelect.innerHTML = ""; // clear previous options
@@ -256,7 +247,14 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
     let selectedRecipes = Array.from(document.getElementById("selected-recipes").selectedOptions).map(option => option.value);
 
     // calculate kcal count for the meal
-    let totalMealKcalCount = calculateMealKcal(selectedRecipes, JSON.parse(localStorage.getItem('recipesList')) || []);
+    let totalMealKcalCount = 0;
+    let recipesList = JSON.parse(localStorage.getItem('recipesList'));
+    selectedRecipes.forEach(recipeName => {
+        let recipe = recipesList.find(recipe => recipe.recipeName === recipeName);
+        if (recipe) {
+            totalMealKcalCount += recipe.totalKcalCount;
+        }
+    });
 
     // object to store meal details
     let meal = {
@@ -282,8 +280,6 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
     updateTotalKcalToday();
 });
 
-updateMealsList();
-
 function populateRecipesList() {
     let selectedRecipesSelect = document.getElementById("selected-recipes");
     selectedRecipesSelect.innerHTML = "";
@@ -297,8 +293,6 @@ function populateRecipesList() {
         selectedRecipesSelect.appendChild(option);
     });
 }
-
-populateRecipesList();
 
 function updateMealsList() {
     let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
@@ -314,30 +308,14 @@ function updateMealsList() {
     });
 }
 
-function calculateMealKcal(selectedRecipes, recipesList) { // Pass recipesList as parameter
-    let totalMealKcalCount = 0;
-    selectedRecipes.forEach(recipeName => {
-        let recipe = recipesList.find(recipe => recipe.recipeName === recipeName);
-        if (recipe) {
-            totalMealKcalCount += recipe.totalKcalCount;
-        }
-    });
-    console.log(totalMealKcalCount);
-    return totalMealKcalCount;
-}
-
 // set up the functionality for clearing the recipes list from localStorage 
-let clearButtonMeals = document.getElementById("clear-meals-list");
-clearButtonMeals.addEventListener("click", function () {
+document.getElementById("clear-meals-list").addEventListener("click", function () {
     localStorage.removeItem('mealsList');
     updateMealsList(); // Re-fetch and update the list from localStorage
 });
 
-// 
 // Total calories today 
-//
-
-function calculateTotalKcalToday() {
+function updateTotalKcalToday() {
     let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
     
     // https://stackoverflow.com/questions/47066555/remove-time-after-converting-date-toisostring 
@@ -350,16 +328,8 @@ function calculateTotalKcalToday() {
         }
     })
 
-    return totalKcalToday;
+    document.getElementById('total-kcal-today').textContent = totalKcalToday;
 }
-
-function updateTotalKcalToday() {
-    let totalKcalTodayElement = document.getElementById('total-kcal-today');
-    let totalKcalToday = calculateTotalKcalToday();
-    totalKcalTodayElement.textContent = `${totalKcalToday}`;
-}
-
-updateTotalKcalToday();
 
 // event listener checking name format
 function checkNameFormat(event) {
@@ -369,6 +339,19 @@ function checkNameFormat(event) {
     }
     event.currentTarget.setCustomValidity(message);
 }
+
+/*
+ * setup application
+ */
+
+// call functions to initialise application
+populateIngredientsList();
+populateRecipesList();
+updateExistingCategories();
+updateIngredientsList();
+updateRecipesList();
+updateMealsList();
+updateTotalKcalToday();
 
 // add event listener for all text inputs
 document.getElementById("meal-name").addEventListener("input", checkNameFormat);
