@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="scss/main.scss">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="ingredients-form">
+    <button onclick="toggleVisibility('meal-form')">Create Meal</button>
+    <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
+    <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
+
+    <div id="meal-form" class="hidden">
+        <p>Create Meal</p>
+    </div>
+
+    <div id="recipe-form" class="hidden">
+        <p>Create Recipe</p>
+    </div>
+
+    <div id="ingredients-form" class="hidden">
         <form id="ing-form">
             <!-- Ingredient name -->
             <label for="ing-name">Ingredient Name</label><br>
@@ -26,15 +38,16 @@
             <!-- Create button -->
             <button type="submit">Create</button>
         </form>
+
+        <div class="ingredients-list">
+            <h2>Ingredients List</h2>
+            <ul>
+                <!-- ingredients will be added dynamically -->
+            </ul>
+            <button id="clear">Clear Ingredients List</button>
+        </div>
     </div>
 
-    <div class="ingredients-list">
-        <h2>Ingredients List</h2>
-        <ul>
-            <!-- ingredients will be added dynamically -->
-        </ul>
-        <button id="clear">Clear Ingredients List</button>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>

@@ -5,18 +5,18 @@ function updateExistingCategories() {
     existingCategoriesSelect.innerHTML = ""; // clear previous options 
 
     let existingCategories = JSON.parse(localStorage.getItem('existingCategories'));
-    
+
     if (!existingCategories) {
         existingCategories = [];
     };
     localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
 
-    if(existingCategories) {
-    existingCategories.forEach(category => {
-        let option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        existingCategoriesSelect.appendChild(option)
+    if (existingCategories) {
+        existingCategories.forEach(category => {
+            let option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            existingCategoriesSelect.appendChild(option)
         });
     }
     console.log('test');
@@ -59,8 +59,8 @@ document.getElementById("ing-form").addEventListener("submit", function (event) 
         }
     }
     console.log(ingredientsList);
-    
-    if(!category) {
+
+    if (!category) {
         return;
     }
 
@@ -78,9 +78,9 @@ document.getElementById("ing-form").addEventListener("submit", function (event) 
 
 // set up the functionality for clearing the localStorage favourites
 let clearButton = document.getElementById("clear");
-clearButton.addEventListener("click", function() {
+clearButton.addEventListener("click", function () {
     localStorage.removeItem('ingredientsList');
-    ingredientsList = []; 
+    ingredientsList = [];
     console.log(ingredientsList);
     updateIngredientsList();
 });
@@ -91,21 +91,32 @@ function updateIngredientsList() {
 
     // select the list element and clear it's content
     let list = document.querySelector(".ingredients-list ul");
-    list.innerHTML = "";    
+    list.innerHTML = "";
 
     // retrieve the ingredients list from localStorage
     ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
-  
-    // make sure the localStorage item exists by checking it's not equal to 'null'
-    if (ingredientsList !== null){
-  
-      // Loop through the ingredients list and add their names as list items to the page
-      ingredientsList.forEach((ingredient) => {
-        let listItem = document.createElement("li");
-        listItem.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
-        list.appendChild(listItem);
-      })
-    } 
-  };
 
-  updateIngredientsList();
+    // make sure the localStorage item exists by checking it's not equal to 'null'
+    if (ingredientsList !== null) {
+
+        // Loop through the ingredients list and add their names as list items to the page
+        ingredientsList.forEach((ingredient) => {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
+            list.appendChild(listItem);
+        })
+    }
+};
+
+updateIngredientsList();
+
+// toggleVisibility function - used to show and hide the Create Meal, Recipe and Ingredient divs
+// https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+function toggleVisibility(divId) {
+    var div = document.getElementById(divId);
+    if (div.style.display === "none") {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
+}
