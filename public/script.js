@@ -1,5 +1,8 @@
-// create global lists
-let ingredientsList = [];
+// declare global lists
+var existingCategories = null;
+var ingredientsList = null;
+var recipesList = null;
+var mealsList = null;
 
 /*
  * navigation tabs in configuration section
@@ -7,46 +10,55 @@ let ingredientsList = [];
 
 // nav tabs https://www.w3schools.com/howto/howto_js_tabs.asp
 function clickTab(event) {
-  // Declare all variables
-  let i, tabcontent, tablinks;
-  // pattern for tabnam is "tab-" + formName, so take away first 4 characters to get formName
-  let formName = event.currentTarget.id.substring(4);
+    // Declare all variables
+    let i, tabcontent, tablinks;
+    // pattern for tabnam is "tab-" + formName, so take away first 4 characters to get formName
+    let formName = event.currentTarget.id.substring(4);
 
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(formName).style.display = "block";
-  event.currentTarget.className += " active";
-}
-
-document.getElementById("tab-meal-form").addEventListener("click", clickTab);
-document.getElementById("tab-recipe-form").addEventListener("click", clickTab);
-document.getElementById("tab-ingredients-form").addEventListener("click", clickTab);
-// select default tab
-document.getElementById("tab-meal-form").click();
-
-function updateExistingCategories(category = null) {
-    // load existing categories from localStorage
-    let existingCategories = JSON.parse(localStorage.getItem('existingCategories')) || [];
-
-    // add category if it doesn't already exist
-    if (category && !existingCategories.includes(category)) {
-        existingCategories.push(category);
-        localStorage.setItem('existingCategories', JSON.stringify(existingCategories));
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
 
-    // update the dropdown
-    if (existingCategories) {
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(formName).style.display = "block";
+    event.currentTarget.className += " active";
+}
+
+/*
+ * manage localStorage
+ */
+
+// return list from localStorage, optionally adding new item
+function loadLocalStorageAndSync(keyName, newItem = null) {
+    // load existing list from localStorage
+    let list = JSON.parse(localStorage.getItem(keyName)) || [];
+
+    // optionally add newItem
+    if (newItem) {
+        list.push(newItem);
+        localStorage.setItem(keyName, JSON.stringify(list));
+    }
+
+    return list;
+}
+
+/*
+ * manage existing categories
+ */
+
+function updateExistingCategories(category = null) {
+    // initialise empty existingCategories or add new category
+    if (!existingCategories || category) {
+        existingCategories = loadLocalStorageAndSync('existingCategories', category);
+
         // clear dropdown
         let existingCategoriesSelect = document.getElementById("existing-ingredient-categories");
         existingCategoriesSelect.innerHTML = "";
@@ -62,13 +74,11 @@ function updateExistingCategories(category = null) {
 }
 
 //
-// Create ingredient
+// manage ingredients
 //
 
-document.getElementById("ingredient-form").addEventListener("submit", function (event) {
+document.getElementById("ingredient-form").addEventListener("submit", (event) => {
     event.preventDefault(); // used to stop the page from reloading
-
-    document.getElementById("ingredient-name-error").innerHTML = ''; // clear error message
 
     // getting the values from the user's input into the relevant form field
     let name = document.getElementById("ingredient-name").value;
@@ -77,8 +87,12 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
     // https://www.w3schools.com/jsref/jsref_parsefloat.asp 
     // parseFloat used to ensure that the number is not treated as a string - necessary for kcal calculations later
     let kcalCount = parseFloat(kcalCountInput);
+    // check if user added new category
     let category = document.getElementById("ingredient-category").value;
-    if (!category) {
+    if (category) {
+        updateExistingCategories(category);
+    } else {
+        // use dropdown value
         category = document.getElementById("existing-ingredient-categories").value;
     }
 
@@ -89,155 +103,159 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
         ingredientCategory: category
     };
 
-    // get the stored ingredients list from local storage
-    ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
+    // clear the form after an ingredient has been created for an easier user experience
+    document.getElementById("ingredient-category").value = "";
+    document.getElementById("ingredient-name").value = "";
+    document.getElementById("ingredient-kcal-count").value = "";
 
-    // the following if statement has been adapted from the Countries of the World API exercise in Week 5
-    // Check if the item doesn't exist in localStorage by seeing if it is null
-    if (ingredientsList == null) {
-        // In which case, use the ingredient object created by user input to create an array
-        ingredientsList = [ingredient]
-    } else {
-        // log that a duplicate ingredient has been created
-        if (ingredientsList.find(element => element.ingredientName === ingredient.ingredientName)) {
-            document.getElementById("ingredient-name-error").innerHTML = 'Ingredient already exists';
-        } else {
-            // else (i.e. if the ingredient has not been created before) add ingredient to array
-            ingredientsList.push(ingredient);
-        }
-    }
-    console.log(ingredientsList);
-
-    updateExistingCategories(category);
-
-    // save the current ingredients list to localStorage and convert it to JSON format for storage
-    localStorage.setItem('ingredientsList', JSON.stringify(ingredientsList));
-    updateIngredientsList();
+    updateIngredientsList(ingredient);
 });
 
 
-// set up the functionality for clearing the ingredients list from localStorage 
-document.getElementById("clear-ingredients-list").addEventListener("click", function () {
+// set up the functionality for clearing the ingredients and categories lists from localStorage 
+document.getElementById("clear-ingredients-list").addEventListener("click", () => {
     localStorage.removeItem('ingredientsList');
-    ingredientsList = [];
-    console.log(ingredientsList);
+    ingredientsList = null;
     updateIngredientsList();
+    localStorage.removeItem('existingCategories');
+    existingCategories = null;
+    updateExistingCategories();
+    // clear recipes since ingredients are cleared
+    document.getElementById("clear-recipes-list").click();
 });
 
 // function for updating the DOM with ingredients list (i.e. fill in the empty ul element)
 // code below adapted from the Countries of the World API exercise in Week 5
-function updateIngredientsList() {
+function updateIngredientsList(ingredient = null) {
+    // initialise empty ingredientsList or add the new ingredient
+    if (!ingredientsList || ingredient) {
+        ingredientsList = loadLocalStorageAndSync('ingredientsList', ingredient);
+    }
 
     // select the list element and clear it's content
     let list = document.querySelector(".ingredients-list ul");
     list.innerHTML = "";
 
-    // retrieve the ingredients list from localStorage
-    ingredientsList = JSON.parse(localStorage.getItem('ingredientsList'));
-
-    // make sure the localStorage item exists by checking it's not equal to 'null'
-    if (ingredientsList !== null) {
-
-        // Loop through the ingredients list and add their names as list items to the page
-        ingredientsList.forEach((ingredient) => {
-            let listItem = document.createElement("li");
-            listItem.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
-            list.appendChild(listItem);
-        })
-    }
-};
-
-// toggleVisibility function - used to show and hide the Create Meal, Recipe and Ingredient divs
-// https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-function toggleVisibility(divId) {
-    let div = document.getElementById(divId);
-    if (div.style.display === "none") {
-        div.style.display = "block";
-    } else {
-        div.style.display = "none";
-    }
-}
-
-//
-// Create Recipe
-//
-
-document.getElementById("recipe-form").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // get values from user input
-    let recipeName = document.getElementById("recipe-name").value;
-    let selectedIngredients = [];
-    let totalKcalCount = 0; // initialise total kcal counter
-
-    selectedIngredients.forEach(function (ingredient) {
-        totalKcalCount += parseFloat(ingredient.dataset.kcal);
+    // Loop through the ingredients list and add their names as list items to the page
+    ingredientsList.forEach((ingredient) => {
+        let listItem = document.createElement("li");
+        listItem.textContent = ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+        listItem.value = ingredient.ingredientName;
+        list.appendChild(listItem);
     })
 
-    // object to store the recipe details
-    let recipe = {
-        recipeName: recipeName,
-        ingredients: Array.from(selectedIngredients).map(function (ingredient) {
-            return {
-                name: ingredient.dataset.name,
-                kcal: parseFloat(ingredient.dataset.kcal)
-            };
-        }),
-        totalKcalCount: totalKcalCount
-    };
-
-    // store the recipe object in localStorage for users to be able to access in the future 
-    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
-    recipesList.push(recipe);
-    localStorage.setItem('recipesList', JSON.stringify(recipesList));
-
-    // clear the form after a recipe has been created for an easier user experience
-    document.getElementById("recipe-name").value = "";
-    document.getElementById("selected-ingredients").selectedIndex = -1;
-
-    updateRecipesList();
-});
-
-function updateRecipesList() {
-    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
-    let listElement = document.querySelector(".recipes-list ul");
-    listElement.innerHTML = ""; // clear existing list for re-population to ensure the most up-to-date list is being displayed
-
-    if (recipesList) {
-        recipesList.forEach(function (recipe) {
-            let listItem = document.createElement("li");
-            listItem.textContent = `${recipe.recipeName}: ${recipe.ingredients.map(ingredient => ingredient.name).join(", ")} - Total Calories: ${recipe.totalKcalCount} kcal`;
-            listElement.appendChild(listItem);
-        });
-    }
-}
+    // update ingredients list in recipe tab
+    populateIngredientsList();
+};
 
 function populateIngredientsList() {
     let selectedIngredientsSelect = document.getElementById("selected-ingredients");
     selectedIngredientsSelect.innerHTML = ""; // clear previous options
 
-    let ingredientsList = JSON.parse(localStorage.getItem('ingredientsList')) || [];
+    if (ingredientsList.length == 0) {
+        selectedIngredientsSelect.hidden = true;
+        document.getElementById("recipe-form-submit").disabled = true;
+        document.getElementById("meal-form-submit").disabled = true;
+    } else {
+        selectedIngredientsSelect.hidden = false;
+        document.getElementById("recipe-form-submit").disabled = false;
+        document.getElementById("meal-form-submit").disabled = false;
+        ingredientsList.forEach((ingredient) => {
+            let option = document.createElement("option");
+            option.value = ingredient.ingredientName;
+            option.textContent = ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+            option.value = ingredient.ingredientName;
+            selectedIngredientsSelect.appendChild(option);
+        });
+    }
+}
 
-    ingredientsList.forEach(function (ingredient) {
-        let option = document.createElement("option");
-        option.value = ingredient.ingredientName;
-        option.textContent = `${ingredient.ingredientName} - ${ingredient.ingredientKcalCount} kcal [${ingredient.ingredientCategory}]`;
-        option.dataset.kcal = ingredient.ingredientKcalCount; // Set data-kcal attribute
-        selectedIngredientsSelect.appendChild(option);
-    })
+/*
+ * manage recipe
+*/
+
+document.getElementById("recipe-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    // get values from user input
+    let recipeName = document.getElementById("recipe-name").value;
+    let selectedIngredients = Array.from(document.getElementById("selected-ingredients").selectedOptions).map(option => option.value);
+
+    // object to store the recipe details
+    let recipe = {
+        recipeName: recipeName,
+        ingredients: selectedIngredients
+    };
+
+    // clear the form after a recipe has been created for an easier user experience
+    document.getElementById("recipe-name").value = "";
+    document.getElementById("selected-ingredients").selectedIndex = -1;
+
+    updateRecipesList(recipe);
+});
+
+function calcRecipeKcal(recipeName) {
+    let recipe = recipesList.find((recipe => recipeName === recipe.recipeName));
+    if (!recipe) {
+        return 0;
+    } else {
+        return recipe.ingredients.reduce((val, item) => {
+            let ingredient = ingredientsList.find((i) => i.ingredientName === item);
+            return val + ingredient.ingredientKcalCount;
+        }, 0);
+    }
+}
+
+function updateRecipesList(recipe = null) {
+    // initialise empty recipesList or add the new recipe
+    if (!recipesList || recipe) {
+        recipesList = loadLocalStorageAndSync('recipesList', recipe);
+    }
+
+    let listElement = document.querySelector(".recipes-list ul");
+    listElement.innerHTML = ""; // clear existing list for re-population to ensure the most up-to-date list is being displayed
+
+    recipesList.forEach((recipe) => {
+        let listItem = document.createElement("li");
+        listItem.textContent = recipe.recipeName + ": " + recipe.ingredients.join(", ") + " - Total Calories: " + calcRecipeKcal(recipe.recipeName) + " kcal";
+        listItem.value = recipe.recipeName;
+        listElement.appendChild(listItem);
+    });
+
+    populateRecipesList();
 }
 
 // set up the functionality for clearing the recipes list from localStorage 
-document.getElementById("clear-recipes-list").addEventListener("click", function () {
+document.getElementById("clear-recipes-list").addEventListener("click", () => {
     localStorage.removeItem('recipesList');
+    recipesList = null;
     updateRecipesList(); // Re-fetch and update the list from localStorage
+    // clear meals since recipes are cleared
+    document.getElementById("clear-meals-list").click();
 });
 
-//
-// Create Meal
-//
+function populateRecipesList() {
+    let selectedRecipesSelect = document.getElementById("selected-recipes");
+    selectedRecipesSelect.innerHTML = "";
 
-document.getElementById("meal-form").addEventListener("submit", function (event) {
+    if (recipesList.length == 0) {
+        selectedRecipesSelect.hidden = true;
+    } else {
+        selectedRecipesSelect.hidden = false;
+        recipesList.forEach((recipe) => {
+            let option = document.createElement("option");
+            option.textContent = recipe.recipeName;
+            option.value = recipe.recipeName;
+            selectedRecipesSelect.appendChild(option);
+        });
+    }
+}
+
+/*
+ * manage meals
+ */
+
+document.getElementById("meal-form").addEventListener("submit", (event) => {
     event.preventDefault();
 
     // get values from user input
@@ -246,29 +264,13 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
     let mealTime = document.getElementById("meal-time").value;
     let selectedRecipes = Array.from(document.getElementById("selected-recipes").selectedOptions).map(option => option.value);
 
-    // calculate kcal count for the meal
-    let totalMealKcalCount = 0;
-    let recipesList = JSON.parse(localStorage.getItem('recipesList'));
-    selectedRecipes.forEach(recipeName => {
-        let recipe = recipesList.find(recipe => recipe.recipeName === recipeName);
-        if (recipe) {
-            totalMealKcalCount += recipe.totalKcalCount;
-        }
-    });
-
     // object to store meal details
     let meal = {
         mealName: mealName,
         mealDate: mealDate,
         mealTime: mealTime,
         recipes: selectedRecipes,
-        totalMealKcalCount: totalMealKcalCount
     };
-
-    // store the meal object in local storage
-    let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
-    mealsList.push(meal);    
-    localStorage.setItem('mealsList', JSON.stringify(mealsList));
 
     // clear the form after a meal has been created
     document.getElementById("meal-name").value = "";
@@ -276,57 +278,79 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
     document.getElementById("meal-time").value = "";
     document.getElementById("selected-recipes").selectedIndex = -1;
 
-    updateMealsList();
+    updateMealsList(meal);
     updateTotalKcalToday();
 });
 
-function populateRecipesList() {
-    let selectedRecipesSelect = document.getElementById("selected-recipes");
-    selectedRecipesSelect.innerHTML = "";
+function calcMealKcal(meal) {
+    return meal.recipes.reduce((val, recipeName) => {
+        return val + calcRecipeKcal(recipeName);
+    }, 0);
 
-    let recipesList = JSON.parse(localStorage.getItem('recipesList')) || [];
-
-    recipesList.forEach(function (recipe) {
-        let option = document.createElement("option");
-        option.value = recipe.recipeName;
-        option.textContent = recipe.recipeName;
-        selectedRecipesSelect.appendChild(option);
-    });
 }
 
-function updateMealsList() {
-    let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
+function updateMealsList(meal = null) {
+    // initialise empty mealsList or add the new meal
+    if (!mealsList || meal) {
+        mealsList = loadLocalStorageAndSync('mealsList', meal);
+        mealsList.sort((a, b) => {
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+            // A negative value indicates that a should come before b.
+            // A positive value indicates that a should come after b.
+            // Zero or NaN indicates that a and b are considered equal.
+            //
+            // we want to sort in reverse order, most recent datetime first
+            if (a.mealDate != b.mealDate) {
+                return (a.mealDate > b.mealDate) ? -1 : 1;
+            } else if (a.mealTime != b.mealTime) {
+                return (a.mealTime > b.mealTime) ? -1 : 1;
+            } else {
+                return 0;
+            }
+        });
+    }
 
     let listElement = document.querySelector(".meals-list ul");
     listElement.innerHTML = "";
 
-    mealsList.forEach(function (meal) {
+    let stillToday = true;
+    let currentDate = getCurrentDate();
+    mealsList.forEach((meal) => {
         let listItem = document.createElement("li");
-        let totalKcalText = meal.recipes.length > 0 ? ` -Total Calories: ${meal.totalMealKcalCount} kcal` : ''; // if there are no meals do not display kcal count
-        listItem.textContent = `${meal.mealName}: ${meal.mealDate} ${meal.mealTime}${totalKcalText}`;
+        let totalKcalText = (meal.recipes.length == 0) ? totalKcalText : "-Total Calories: " + calcMealKcal(meal) + " kcal"; // if there are no meals do not display kcal count
+        listItem.innerHTML = meal.mealName + ": " + meal.mealDate + " " + meal.mealTime + " " + totalKcalText;
+        // add a separator once today's meals are all added
+        if (stillToday && meal.mealDate != currentDate) {
+            stillToday = false;
+            listItem.innerHTML = "<hr>" + listItem.innerHTML;
+        }
+        listItem.value = meal.mealName;
         listElement.appendChild(listItem);
     });
 }
 
 // set up the functionality for clearing the recipes list from localStorage 
-document.getElementById("clear-meals-list").addEventListener("click", function () {
+document.getElementById("clear-meals-list").addEventListener("click", () => {
     localStorage.removeItem('mealsList');
+    mealsList = null;
     updateMealsList(); // Re-fetch and update the list from localStorage
+    updateTotalKcalToday();
 });
+
+function getCurrentDate() {
+    // https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+    let currentDate = new Date();
+    let offset = currentDate.getTimezoneOffset();
+    return new Date(currentDate.getTime() - (offset*1000*60)).toISOString().split('T')[0];
+}
 
 // Total calories today 
 function updateTotalKcalToday() {
-    let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
-    
-    // https://stackoverflow.com/questions/47066555/remove-time-after-converting-date-toisostring 
-    let currentDate = new Date().toISOString().split('T', 1)[0];
-    let totalKcalToday = 0;
-
-    mealsList.forEach(function (meal) {
-        if (meal.mealDate === currentDate) {
-            totalKcalToday += meal.totalMealKcalCount;
-        }
-    })
+    let currentDate = getCurrentDate();
+    let totalKcalToday = mealsList.reduce((val, meal) => {
+        let extraKcal = (meal.mealDate === currentDate) ? calcMealKcal(meal) : 0;
+        return val + extraKcal;
+    }, 0);
 
     document.getElementById('total-kcal-today').textContent = totalKcalToday;
 }
@@ -338,23 +362,47 @@ function checkNameFormat(event) {
         message = "Name should ony have letters, possibly separated by spaces";
     }
     event.currentTarget.setCustomValidity(message);
+    return message;
+}
+
+function checkNameFormatAndUniqueness(event, currentList) {
+    let message = checkNameFormat(event);
+    if (!message && currentList.includes(event.currentTarget.value)) {
+        message = event.currentTarget.value + " is already used, choose another name";
+    }
+    event.currentTarget.setCustomValidity(message);
 }
 
 /*
  * setup application
  */
 
-// call functions to initialise application
-populateIngredientsList();
-populateRecipesList();
+// update global lists
 updateExistingCategories();
 updateIngredientsList();
 updateRecipesList();
 updateMealsList();
-updateTotalKcalToday();
 
-// add event listener for all text inputs
+// call functions to initialise application
+updateTotalKcalToday();
+populateIngredientsList();
+populateRecipesList();
+
+// setup tabs
+document.getElementById("tab-meal-form").addEventListener("click", clickTab);
+document.getElementById("tab-recipe-form").addEventListener("click", clickTab);
+document.getElementById("tab-ingredients-form").addEventListener("click", clickTab);
+// select default tab
+document.getElementById("tab-meal-form").click();
+
+// add event listener for text inputs
 document.getElementById("meal-name").addEventListener("input", checkNameFormat);
-document.getElementById("recipe-name").addEventListener("input", checkNameFormat);
-document.getElementById("ingredient-name").addEventListener("input", checkNameFormat);
-document.getElementById("ingredient-category").addEventListener("input", checkNameFormat);
+document.getElementById("recipe-name").addEventListener("input", (event) => {
+    checkNameFormatAndUniqueness(event, recipesList.map((recipe) => recipe.recipeName));
+});
+document.getElementById("ingredient-name").addEventListener("input", (event) => {
+    checkNameFormatAndUniqueness(event, ingredientsList.map((ingredient) => ingredient.ingredientName));
+});
+document.getElementById("ingredient-category").addEventListener("input", (event) => {
+    checkNameFormatAndUniqueness(event, existingCategories);
+});
