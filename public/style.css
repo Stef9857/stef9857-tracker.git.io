@@ -12,35 +12,32 @@ body {
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
-        "kcal-total log"
-        "history log";
+        "kcal-total menu"
+        "history menu";
 }
 
 .kcal-total {
     grid-area: kcal-total;
-}
-
-.history {
-    grid-area: history;
-}
-
-.log {
-    grid-area: log;
-}
-
-.kcal-total {
     display: flex;
     /*centre horizontally*/
     align-items: center;
     flex-direction: column;
+    padding: 5%;
 }
 
 .history {
+    grid-area: history;
     padding: 10%;
 }
 
-.log {
+.menu {
+    grid-area: menu;
     padding: 5%;
+}
+
+.kcal-title {
+    font-size: larger;
+    font-weight: bold;
 }
 
 /* Media query for mobile devices (i.e. screen sizes narrower than 600px) */
@@ -51,7 +48,7 @@ body {
         grid-template-rows: auto auto auto;
         grid-template-areas:
             "kcal-total"
-            "log"
+            "menu"
             "history";
     }
 }
@@ -60,14 +57,14 @@ body {
  * nav tabs 
  * https://www.w3schools.com/howto/howto_js_tabs.asp
  */
- .tab {
+.tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-  }
-  
-  /* Style the buttons that are used to open the tab content */
-  .tab button {
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
     background-color: inherit;
     float: left;
     border: none;
@@ -75,22 +72,22 @@ body {
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
-  }
-  
-  /* Change background color of buttons on hover */
-  .tab button:hover {
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
     background-color: #ddd;
-  }
-  
-  /* Create an active/current tablink class */
-  .tab button.active {
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
     background-color: #ccc;
-  }
-  
-  /* Style the tab content */
-  .tabcontent {
+}
+
+/* Style the tab content */
+.tabcontent {
     display: none;
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
-  }
+}

@@ -1,3 +1,7 @@
+/*
+ * navigation tabs in configuration section
+ */
+
 // nav tabs https://www.w3schools.com/howto/howto_js_tabs.asp
 function clickTab(event) {
   // Declare all variables
@@ -252,7 +256,7 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
     let selectedRecipes = Array.from(document.getElementById("selected-recipes").selectedOptions).map(option => option.value);
 
     // calculate kcal count for the meal
-    let totalMealKcount = calculateMealKcal(selectedRecipes, JSON.parse(localStorage.getItem('recipesList')) || []);
+    let totalMealKcalCount = calculateMealKcal(selectedRecipes, JSON.parse(localStorage.getItem('recipesList')) || []);
 
     // object to store meal details
     let meal = {
@@ -260,12 +264,12 @@ document.getElementById("meal-form").addEventListener("submit", function (event)
         mealDate: mealDate,
         mealTime: mealTime,
         recipes: selectedRecipes,
-        totalMealKcount: totalMealKcount
+        totalMealKcalCount: totalMealKcalCount
     };
 
     // store the meal object in local storage
     let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
-    mealsList.push(meal);
+    mealsList.push(meal);    
     localStorage.setItem('mealsList', JSON.stringify(mealsList));
 
     // clear the form after a meal has been created
@@ -298,27 +302,28 @@ populateRecipesList();
 
 function updateMealsList() {
     let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
+
     let listElement = document.querySelector(".meals-list ul");
     listElement.innerHTML = "";
 
     mealsList.forEach(function (meal) {
         let listItem = document.createElement("li");
-        let totalKcalText = meal.recipes.length > 0 ? ` -Total Calories: ${meal.totalMealKcount} kcal` : ''; // if there are no meals do not display kcal count
+        let totalKcalText = meal.recipes.length > 0 ? ` -Total Calories: ${meal.totalMealKcalCount} kcal` : ''; // if there are no meals do not display kcal count
         listItem.textContent = `${meal.mealName}: ${meal.mealDate} ${meal.mealTime}${totalKcalText}`;
         listElement.appendChild(listItem);
     });
 }
 
 function calculateMealKcal(selectedRecipes, recipesList) { // Pass recipesList as parameter
-    let totalMealKcount = 0;
+    let totalMealKcalCount = 0;
     selectedRecipes.forEach(recipeName => {
         let recipe = recipesList.find(recipe => recipe.recipeName === recipeName);
         if (recipe) {
-            totalMealKcount += recipe.totalKcalCount;
+            totalMealKcalCount += recipe.totalKcalCount;
         }
     });
-    console.log(totalMealKcount);
-    return totalMealKcount;
+    console.log(totalMealKcalCount);
+    return totalMealKcalCount;
 }
 
 // set up the functionality for clearing the recipes list from localStorage 
@@ -334,13 +339,14 @@ clearButtonMeals.addEventListener("click", function () {
 
 function calculateTotalKcalToday() {
     let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
+    
     // https://stackoverflow.com/questions/47066555/remove-time-after-converting-date-toisostring 
     let currentDate = new Date().toISOString().split('T', 1)[0];
     let totalKcalToday = 0;
 
     mealsList.forEach(function (meal) {
         if (meal.mealDate === currentDate) {
-            totalKcalToday += meal.totalMealKcount;
+            totalKcalToday += meal.totalMealKcalCount;
         }
     })
 
@@ -354,3 +360,18 @@ function updateTotalKcalToday() {
 }
 
 updateTotalKcalToday();
+
+// event listener checking name format
+function checkNameFormat(event) {
+    let message = "";
+    if (event.currentTarget.validity.patternMismatch) {
+        message = "Name should ony have letters, possibly separated by spaces";
+    }
+    event.currentTarget.setCustomValidity(message);
+}
+
+// add event listener for all text inputs
+document.getElementById("meal-name").addEventListener("input", checkNameFormat);
+document.getElementById("recipe-name").addEventListener("input", checkNameFormat);
+document.getElementById("ingredient-name").addEventListener("input", checkNameFormat);
+document.getElementById("ingredient-category").addEventListener("input", checkNameFormat);
