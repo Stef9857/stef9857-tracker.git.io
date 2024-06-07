@@ -11,13 +11,13 @@ body {
 
 .container {  display: grid;
     grid-template-columns: 25% 75%;
-    grid-template-rows: 10% 45% 45%;
+    grid-template-rows: 5% 47.5% 47.5%;
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
       "header header"
-      "kcal-total meals-recipes-ingredients"
-      "history meals-recipes-ingredients";
+      "kcal-total log"
+      "history log";
     width: 100vw;
     height: 100vh;
   }
@@ -26,8 +26,25 @@ body {
   
   .history { grid-area: history; }
   
-  .meals-recipes-ingredients { grid-area: meals-recipes-ingredients; }
+  .log { grid-area: log; }
   
   .header { grid-area: header; }
   
+  .kcal-total {
+    display: flex;
+    justify-content: center; /*centre horizontally*/
+    align-items: center; /*centre vertically*/
+    flex-direction: column;
+  }
+
+  .header {
+    background-color: orange;
+  }
+
+  .history {
+    padding: 10%;
+  }
   
+  .log {
+    padding: 5%;
+  }

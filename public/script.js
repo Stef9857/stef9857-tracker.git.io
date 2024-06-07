@@ -251,7 +251,7 @@ document.getElementById("meal-form").addEventListener("submit", function(event){
     document.getElementById("selected-recipes").selectedIndex = -1;
 
     updateMealsList();
-    console.log(totalMealKcount);
+    updateTotalKcalToday();
 });
 
 updateMealsList();
@@ -303,3 +303,30 @@ clearButtonMeals.addEventListener("click", function () {
     localStorage.removeItem('mealsList');
     updateMealsList(); // Re-fetch and update the list from localStorage
 });
+
+// 
+// Total calories today 
+//
+
+function calculateTotalKcalToday() {
+    let mealsList = JSON.parse(localStorage.getItem('mealsList')) || [];
+    // https://stackoverflow.com/questions/47066555/remove-time-after-converting-date-toisostring 
+    let currentDate = new Date().toISOString().split('T', 1)[0];
+    let totalKcalToday = 0;
+
+    mealsList.forEach(function(meal){
+        if (meal.mealDate === currentDate) {
+            totalKcalToday += meal.totalMealKcount;
+        }
+    })
+
+    return totalKcalToday; 
+}
+
+function updateTotalKcalToday() {
+    let totalKcalTodayElement = document.getElementById('total-kcal-today');
+    let totalKcalToday = calculateTotalKcalToday();
+    totalKcalTodayElement.textContent = `${totalKcalToday}`; 
+}
+
+updateTotalKcalToday();

@@ -16,7 +16,9 @@
         </div>
 
         <div class="kcal-total">
-            <h1>Number</h1>
+            <h1 id="total-kcal-today">
+                <!-- will be updated dynamically -->
+            </h1>
             <p>calories consumed today</p>
         </div>
 
@@ -24,12 +26,14 @@
             <h2>Meal History</h2>
         </div>
 
-        <div class="meals-recipes-ingredients">
-            <button onclick="toggleVisibility('meal-form')">Create Meal</button>
-            <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
-            <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
+        <div class="log">
+            <div class="toggle-buttons">
+                <button onclick="toggleVisibility('meal-form')">Create Meal</button>
+                <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
+                <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
+            </div>
         
-            <div id="meal-form" class="hidden">
+            <div id="meal-form" >
                 <h2>Create Meal</h2>
                 <form id="meal-form">
                     <!-- Meal name -->
