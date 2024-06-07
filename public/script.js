@@ -1,5 +1,35 @@
+// nav tabs https://www.w3schools.com/howto/howto_js_tabs.asp
+function clickTab(event) {
+  // Declare all variables
+  let i, tabcontent, tablinks;
+  // pattern for tabnam is "tab-" + formName, so take away first 4 characters to get formName
+  let formName = event.currentTarget.id.substring(4);
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(formName).style.display = "block";
+  event.currentTarget.className += " active";
+}
+
+document.getElementById("tab-meal-form").addEventListener("click", clickTab);
+document.getElementById("tab-recipe-form").addEventListener("click", clickTab);
+document.getElementById("tab-ingredients-form").addEventListener("click", clickTab);
+// select default tab
+document.getElementById("tab-meal-form").click();
+
 // create ingredients list
-let ingredientsList = []; // initialised here because it is used in multiple scopes
+let ingredientsList = []; 
 
 function updateExistingCategories(category = null) {
     // load existing categories from localStorage
@@ -27,6 +57,7 @@ function updateExistingCategories(category = null) {
     }
 }
 
+// initial load of ingredient categories 
 updateExistingCategories();
 
 //
@@ -85,8 +116,7 @@ document.getElementById("ingredient-form").addEventListener("submit", function (
 
 
 // set up the functionality for clearing the ingredients list from localStorage 
-let clearButtonIngredients = document.getElementById("clear-ingredients-list");
-clearButtonIngredients.addEventListener("click", function () {
+document.getElementById("clear-ingredients-list").addEventListener("click", function () {
     localStorage.removeItem('ingredientsList');
     ingredientsList = [];
     console.log(ingredientsList);
@@ -203,8 +233,7 @@ function populateIngredientsList() {
 }
 
 // set up the functionality for clearing the recipes list from localStorage 
-let clearButtonRecipes = document.getElementById("clear-recipes-list");
-clearButtonRecipes.addEventListener("click", function () {
+document.getElementById("clear-recipes-list").addEventListener("click", function () {
     localStorage.removeItem('recipesList');
     updateRecipesList(); // Re-fetch and update the list from localStorage
 });
