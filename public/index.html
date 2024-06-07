@@ -23,18 +23,25 @@
         </div>
 
         <div class="history">
-            <h2>Meal History</h2>
+            <h2>Recent Meals</h2>
+            <!-- display total calorie count -->
+            <div class="meals-list">
+                <ul>
+                    <!-- Meals will be added dynamically -->
+                </ul>
+                <button id="clear-meals-list">Clear Meals List</button>
+            </div>
         </div>
 
         <div class="log">
             <div class="toggle-buttons">
-                <button onclick="toggleVisibility('meal-form')">Create Meal</button>
+                <button onclick="toggleVisibility('meal-form')">Add Meal</button>
                 <button onclick="toggleVisibility('recipe-form')">Create Recipe</button>
                 <button onclick="toggleVisibility('ingredients-form')">Create Ingredient</button>
             </div>
         
             <div id="meal-form" >
-                <h2>Create Meal</h2>
+                <h2>Add Meal</h2>
                 <form id="meal-form">
                     <!-- Meal name -->
                     <label for="meal-name">Meal Name</label><br>
@@ -50,17 +57,8 @@
                     <select id="selected-recipes" multiple>
                         <!-- options will be added dynamically -->
                     </select><br>
-                    <button type="submit">Create Meal</button>
+                    <button type="submit">Add Meal</button>
                 </form>
-        
-                <!-- display total calorie count -->
-                <div class="meals-list">
-                    <h2>Meals List</h2>
-                    <ul>
-                        <!-- Meals will be added dynamically -->
-                    </ul>
-                    <button id="clear-meals-list">Clear Meals List</button>
-                </div>
             </div>
         
             <div id="recipe-form" class="hidden">
