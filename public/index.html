@@ -39,7 +39,8 @@
                 <form id="meal-form">
                     <!-- Meal name -->
                     <label for="meal-name">Meal Name</label><br>
-                    <input type="text" id="meal-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required placeholder="Eg, Breakfast, Lunch, Dinner"><br>
+                    <input type="text" id="meal-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required
+                        placeholder="Eg, Breakfast, Lunch, Dinner"><br>
                     <!-- Date -->
                     <label for="meal-date">Date</label><br>
                     <input type="date" id="meal-date" required><br>
@@ -70,11 +71,13 @@
                     <button type="submit" id="recipe-form-submit">Create Recipe</button>
                 </form>
 
-                <div class="recipes-list">
+                <div class="recipes-list-div">
                     <h2>Recipes List</h2>
-                    <ul>
-                        <!-- will be added dynamically -->
-                    </ul>
+                    <div class="recipes-list">
+                        <ul>
+                            <!-- will be added dynamically -->
+                        </ul>
+                    </div>
                     <button id="clear-recipes-list">Clear Recipes and Meals Lists</button>
                 </div>
             </div>
@@ -100,11 +103,13 @@
                     <button type="submit">Create</button>
                 </form>
 
-                <div class="ingredients-list">
+                <div class="ingredients-list-div">
                     <h2>Ingredients List</h2>
-                    <ul>
-                        <!-- will be added dynamically -->
-                    </ul>
+                    <div class="ingredients-list">
+                        <ul>
+                            <!-- will be added dynamically -->
+                        </ul>
+                    </div>
                     <button id="clear-ingredients-list">Clear All Lists</button>
                 </div>
             </div>

@@ -56,6 +56,29 @@ body {
     margin: 0;
 }
 
+.tabcontent {
+    height: 90%;
+}
+
+.recipes-list {
+    overflow-y: auto;
+    height: 5em;
+}
+
+.ingredients-list {
+    overflow-y: auto;
+    height: 15em;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+}
+
+li {
+    padding: 1% 0;
+}
+
 /* Media query for mobile devices (i.e. screen sizes narrower than 600px) */
 @media screen and (max-width: 600px) {
     .container {
