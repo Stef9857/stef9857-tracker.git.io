@@ -114,15 +114,21 @@ document.getElementById("ingredient-form").addEventListener("submit", (event) =>
 
 // set up the functionality for clearing the ingredients and categories lists from localStorage 
 document.getElementById("clear-ingredients-list").addEventListener("click", () => {
+    // clear ingredients
     localStorage.removeItem('ingredientsList');
     ingredientsList = null;
     updateIngredientsList();
+    // clear categories
     localStorage.removeItem('existingCategories');
     existingCategories = null;
     updateExistingCategories();
     // clear recipes since ingredients are cleared
     document.getElementById("clear-recipes-list").click();
 });
+
+function ingredientAsString(ingredient) {
+    return ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+}
 
 // function for updating the DOM with ingredients list (i.e. fill in the empty ul element)
 // code below adapted from the Countries of the World API exercise in Week 5
@@ -139,7 +145,7 @@ function updateIngredientsList(ingredient = null) {
     // Loop through the ingredients list and add their names as list items to the page
     ingredientsList.forEach((ingredient) => {
         let listItem = document.createElement("li");
-        listItem.textContent = ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+        listItem.textContent = ingredientAsString(ingredient);
         listItem.value = ingredient.ingredientName;
         list.appendChild(listItem);
     })
@@ -162,8 +168,7 @@ function populateIngredientsList() {
         document.getElementById("meal-form-submit").disabled = false;
         ingredientsList.forEach((ingredient) => {
             let option = document.createElement("option");
-            option.value = ingredient.ingredientName;
-            option.textContent = ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+            option.textContent = ingredientAsString(ingredient);
             option.value = ingredient.ingredientName;
             selectedIngredientsSelect.appendChild(option);
         });
@@ -240,8 +245,10 @@ function populateRecipesList() {
 
     if (recipesList.length == 0) {
         selectedRecipesSelect.hidden = true;
+        document.getElementById("meal-form-submit").disabled = true;
     } else {
         selectedRecipesSelect.hidden = false;
+        document.getElementById("meal-form-submit").disabled = false;
         recipesList.forEach((recipe) => {
             let option = document.createElement("option");
             option.textContent = recipe.recipeName;
@@ -317,8 +324,11 @@ function updateMealsList(meal = null) {
     let currentDate = getCurrentDate();
     mealsList.forEach((meal) => {
         let listItem = document.createElement("li");
-        let totalKcalText = (meal.recipes.length == 0) ? totalKcalText : "-Total Calories: " + calcMealKcal(meal) + " kcal"; // if there are no meals do not display kcal count
-        listItem.innerHTML = meal.mealName + ": " + meal.mealDate + " " + meal.mealTime + " " + totalKcalText;
+        let totalKcalText = (meal.recipes.length == 0) ? totalKcalText : "Total KCal: " + calcMealKcal(meal) + " kcal"; // if there are no meals do not display kcal count
+        listItem.innerHTML = meal.mealName + ": " + meal.mealDate + " " + meal.mealTime + "&emsp;" + totalKcalText + "<br>";
+        meal.recipes.forEach(r => {
+            listItem.innerHTML += r + "<br>";
+        });
         // add a separator once today's meals are all added
         if (stillToday && meal.mealDate != currentDate) {
             stillToday = false;
@@ -341,7 +351,7 @@ function getCurrentDate() {
     // https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
     let currentDate = new Date();
     let offset = currentDate.getTimezoneOffset();
-    return new Date(currentDate.getTime() - (offset*1000*60)).toISOString().split('T')[0];
+    return new Date(currentDate.getTime() - (offset * 1000 * 60)).toISOString().split('T')[0];
 }
 
 // Total calories today 

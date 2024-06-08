@@ -18,13 +18,13 @@
         </div>
 
         <div class="history">
-            <h2>Recent Meals</h2>
+            <h3>Recent Meals</h3>
             <div class="meals-list">
                 <ul>
                     <!-- will be added dynamically -->
                 </ul>
-                <button id="clear-meals-list">Clear Meals List</button>
             </div>
+            <button id="clear-meals-list">Clear Meals List</button>
         </div>
 
         <div class="menu">
@@ -39,7 +39,7 @@
                 <form id="meal-form">
                     <!-- Meal name -->
                     <label for="meal-name">Meal Name</label><br>
-                    <input type="text" id="meal-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required><br>
+                    <input type="text" id="meal-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required placeholder="Eg, Breakfast, Lunch, Dinner"><br>
                     <!-- Date -->
                     <label for="meal-date">Date</label><br>
                     <input type="date" id="meal-date" required><br>
@@ -48,7 +48,7 @@
                     <input type="time" id="meal-time" required><br>
                     <!-- Select recipes -->
                     <label for="selected-recipes">Select Recipes</label><br>
-                    <select id="selected-recipes" multiple required>
+                    <select id="selected-recipes" size="10" multiple required>
                         <!-- will be added dynamically -->
                     </select><br>
                     <button type="submit" id="meal-form-submit">Add Meal</button>
@@ -63,7 +63,7 @@
                     <input type="text" id="recipe-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required><br>
                     <!-- Select ingredients name -->
                     <label for="selected-ingredients">Select Ingredients</label><br>
-                    <select id="selected-ingredients" multiple required>
+                    <select id="selected-ingredients" size="10" multiple required>
                         <!-- will be added dynamically -->
                     </select><br>
 
@@ -94,7 +94,8 @@
                     <select id="existing-ingredient-categories">
                         <!-- will be added dynamically -->
                     </select>
-                    <input type="text" id="ingredient-category" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" placeholder="New Category">
+                    <input type="text" id="ingredient-category" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]"
+                        placeholder="New Category">
                     <!-- Create button -->
                     <button type="submit">Create</button>
                 </form>

@@ -1,13 +1,13 @@
 body {
-    width: 100vw;
-    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
     margin: 0;
     padding: 0;
 }
 
 .container {
     display: grid;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 40% 60%;
     grid-template-rows: 20% 80%;
     gap: 0px 0px;
     grid-auto-flow: row;
@@ -22,17 +22,22 @@ body {
     /*centre horizontally*/
     align-items: center;
     flex-direction: column;
-    padding: 5%;
+    padding: 3%;
 }
 
 .history {
     grid-area: history;
-    padding: 10%;
+    padding: 3%;
+}
+
+.meals-list {
+    overflow-y: auto;
+    height: 300px;
 }
 
 .menu {
     grid-area: menu;
-    padding: 5%;
+    padding: 3%;
 }
 
 .kcal-title {
