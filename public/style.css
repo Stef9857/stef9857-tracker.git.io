@@ -7,18 +7,105 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Inter", sans-serif;
-    overflow: hidden;
 }
 
+/* 
+* button styles 
+*/
+button {
+    background-color: white;
+    color: black;
+    border: 2px solid orange;
+    transition-duration: 0.4s;
+    padding: 12px 15px;
+    margin: 1% 0%;
+    border-radius: 25px;
+}
+
+/* used when either there are no recipes and/or no recipes in localStorage to visually show the button is not clickable */
+button:disabled {
+    border-color: lightgray;
+    color: lightgray;
+    background-color: white;
+}
+
+/*
+ * nav tabs 
+ * https://www.w3schools.com/howto/howto_js_tabs.asp
+ */
+.tab {
+    overflow: hidden;
+    background-color: white;
+}
+
+.tablinks {
+    border-radius: 0px;
+    margin: 0 6px;
+}
+
+/* style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    border: 2px solid orange;
+    padding: 20px 16px;
+    transition: 0.3s;
+    width: 28%;
+}
+
+/* needs it's own style to make the buttons the same sizes as the text is too short */
+#tab-meal-div {
+    padding: 20px;
+}
+
+/* create an active/current tablink class */
+.tab button.active {
+    background-color: darkorange;
+    border: 2px solid darkorange;
+}
+
+/* style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 24px;
+    border-top: none;
+    height: 90%;
+}
+
+/* 
+* scrollbar styles
+* https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp 
+*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* track */
+::-webkit-scrollbar-track {
+    background-color: rgb(238, 238, 238);
+    border-radius: 10px;
+}
+
+/* handle */
+::-webkit-scrollbar-thumb {
+    background: orange;
+    border-radius: 10px;
+}
+
+/* handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: darkorange;
+}
+
+/* 
+* HTML form styles 
+*/
 ul {
     list-style-type: none;
     margin: 0;
     font-size: small;
     padding-left: 0;
-}
-
-option:active {
-    background-color: orange;
 }
 
 li {
@@ -51,32 +138,30 @@ option {
     padding: 6px 4px;
 }
 
-option:hover {
-    background-color:sandybrown;
-}
-
 option:active {
     background-color: orange;
 }
 
+/* 
+* grid layout
+* one column layout since mobile screens are more suited for vertical information presentation
+*/
 .container {
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 40% 60%;
-    grid-template-rows: 5% 35% 60%;
-    gap: 0px 0px;
-    grid-auto-flow: row;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
-        "header header"
-        "kcal-total menu"
-        "history menu";
+        "kcal-total"
+        "menu"
+        "history";
 }
 
+/* 
+* grid div styles
+*/
 .header {
     grid-area: header;
     background-color: orange;
 }
-
 
 .kcal-total {
     grid-area: kcal-total;
@@ -104,7 +189,10 @@ option:active {
     padding: 3%;
 }
 
-/* today's kcal count styles */
+/* 
+* today's kcal count feature styles 
+*/
+
 .kcal-title {
     font-size: larger;
     font-weight: bold;
@@ -115,194 +203,226 @@ option:active {
     margin: 0;
 }
 
-/* recipe styles */
-#recipe-form-div {
-    float: left;
-    width: 45%;
-    height: 80%;
-    padding: 5px;
-}
-
-#recipes-list-div {
-    float: right;
-    width: 45%;
-    height: 80%;
-    padding: 5px;
-}
-
-.recipes-list {
-    overflow-y: auto;
-    height: 80%;
-}
-
-/* button styles */
-button {
-    background-color: white;
-    color: black;
-    border: 2px solid orange;
-    transition-duration: 0.4s;
-    padding: 12px 15px;
-    margin: 1% 0%;
-    border-radius: 25px;
-}
-
-button:hover {
-    color: white;
-    background-color: orange;
-}
-
-button:disabled {
-    border-color: gray;
-    color: gray;
-}
-
-/* ingredient form styling */
-.ingredient-name, .ingredient-kcal-count {
-    width: 70%;
-}
-
-#ingredient-form-div {
-    float: left;
-    width: 50%;
-    height: 80%;
-    padding: 5px;
-}
-
-#ingredient-list-div {
-    float: right;
-    width: 50%;
-    height: 80%;
-    padding: 0px;
+/* 
+* ingredient form field styling 
+*/
+.ingredient-name,
+.ingredient-kcal-count {
+    width: 100%;
 }
 
 /* catorory dropdown styling */
 #existing-ingredient-categories {
     border: 1px solid rgb(118, 118, 118);
-    width: 60%;
+    width: 80%;
     height: 50px;
 }
 
-#existing-ingredient-categories:hover {
-    border-color: black;
-}
-
+/* display text 'OR' next to dropdown menu to let users know they can either choose from the dropdown or create a new category*/
 .category-or {
     display: inline-block;
     padding: 0 12px;
 }
 
 #ingredient-category {
-    width: 70%;
     height: 50px;
 }
 
-/* ingredient list styling */
-.ingredients-list {
+/* 
+* ingredient and recipe list styling 
+* restricts the length of the list div so that it does not create an infinite-length page 
+*/
+.ingredients-list, .recipes-list {
     overflow-y: auto;
-    height: 20em;
+    height: 10em;
     margin-bottom: 6px;
 }
 
-/* meal form styling */
+/* 
+* meal form styling 
+* meal date field is wider than meal time field as dates are longer strings
+*/
 .meal-date {
     float: left;
-    width: 50%;
+    width: 60%;
 }
 
 .meal-time {
     float: right;
-    width: 50%;
+    width: 40%;
 }
 
-.meal-date input, .meal-time input {
+.meal-date input,
+.meal-time input {
     width: 95%;
     height: 45px;
     margin: 8px 0 20px 0;
 }
 
-/* Media query for mobile devices (i.e. screen sizes narrower than 1200px) */
-@media screen and (max-width: 1200px) {
+/* Media query for desktop devices (i.e. screen sizes wider than 1200px) */
+@media screen and (min-width: 1200px) {
+
+    /* prevent scrolling on desktop view*/
+    .body {
+        overflow: hidden;
+    }
+
+    button:hover {
+        color: white;
+        background-color: orange;
+    }
+
+    /* 
+    * nav tabs
+    */
+
+    /* Style the tab content - use the border to create the dividing line between the left and right of the page */
+    .tab {
+        border-left: 1px solid #ccc;
+    }
+
+    .tabcontent {
+        border-left: 1px solid #ccc;
+    }
+
+    .tablinks {
+        padding: 5px;
+        margin: 0 12px 0 25px;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        float: left;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        width: 20%;
+    }
+
+    #tab-meal-div {
+        padding: 14px 16px;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: orange;
+        border: 2px solid orange;
+        color: black;
+    }
+
+    /* 
+    * grid layout
+    * added columns to present information horizontally instead of vertically 
+    */
     .container {
-        grid-template-columns: 100%;
-        /* one column layout since these screens are more vertical than horizontal*/
-        grid-template-rows: auto auto auto;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 40% 60%;
+        grid-template-rows: 5% 35% 60%;
+        gap: 0px 0px;
+        grid-auto-flow: row;
         grid-template-areas:
-            "kcal-total"
-            "menu"
-            "history";
+            "header header"
+            "kcal-total menu"
+            "history menu";
+    }
+
+    /* 
+    * hover and active states for selection options 
+    */
+    option:hover {
+        background-color: sandybrown;
+    }
+
+    option:active {
+        background-color: orange;
+    }
+
+    /* 
+    * ingredient div styles - make two columns with ingredient form on the left and ingredient list on the right
+    * this is to make use of the white space that would otherwise be on the right of the ingredient form 
+    */
+    #ingredient-form-div {
+        float: left;
+        width: 50%;
+        height: 80%;
+        padding: 5px;
+    }
+
+    #ingredient-list-div {
+        float: right;
+        width: 50%;
+        height: 80%;
+        padding: 0px;
+    }
+
+    /* ingredient form field styling */
+    .ingredient-name,
+    .ingredient-kcal-count {
+        width: 70%;
+    }
+
+    /* ingredient list styling */
+    .ingredients-list {
+        height: 20em;
+        margin-bottom: 6px;
+    }
+
+    /* 
+    * category dropdown and text input field styling
+    */
+    #existing-ingredient-categories:hover {
+        border-color: black;
+    }
+
+    #ingredient-category {
+        width: 70%;
+        height: 50px;
+    }
+
+    /* 
+    * recipe div styles - make two columns with recipe form on the left and recipe list on the right
+    * this is to make use of the white space that would otherwise be on the right of the recipe form 
+    */
+    #recipe-form-div {
+        float: left;
+        width: 45%;
+        height: 80%;
+        padding: 5px;
+    }
+
+    #recipes-list-div {
+        float: right;
+        width: 45%;
+        height: 80%;
+        padding: 5px;
+    }
+
+    /*
+    * recipe list styling
+    */
+    .recipes-list {
+        overflow-y: auto;
+        height: 80%;
+    }
+
+    /* 
+    * meal form styling 
+    */
+    .meal-date {
+        float: left;
+        width: 50%;
+    }
+
+    .meal-time {
+        float: right;
+        width: 50%;
+    }
+
+    .meal-date input,
+    .meal-time input {
+        width: 95%;
+        height: 45px;
+        margin: 8px 0 20px 0;
     }
 }
-
-/*
- * nav tabs 
- * https://www.w3schools.com/howto/howto_js_tabs.asp
- */
-.tab {
-    overflow: hidden;
-    background-color: white;
-    border-left: 1px solid #ccc;
-}
-
-.tablinks {
-    border-radius: 0px;
-    padding: 5px;
-    margin: 0 12px 0 25px;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: 2px solid orange;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    width: 20%;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-    background-color: orange;
-    border: 2px solid orange;
-    color: black;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-    background-color: darkorange;
-    border: 2px solid darkorange;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 6px 24px;
-    border-left: 1px solid #ccc;
-    border-top: none;
-    height: 90%;
-}
-
-
-/* https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp */
-/* width */
-::-webkit-scrollbar {
-    width: 15px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background-color: rgb(238, 238, 238);
-    border-radius: 10px;
-}
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: orange; 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: darkorange; 
-  }
