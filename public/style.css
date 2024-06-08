@@ -40,7 +40,7 @@ button:disabled {
 
 .tablinks {
     border-radius: 0px;
-    margin: 0 6px;
+    margin: 0 7px;
 }
 
 /* style the buttons that are used to open the tab content */
@@ -147,9 +147,11 @@ option:active {
 * one column layout since mobile screens are more suited for vertical information presentation
 */
 .container {
+    display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: 5% auto auto auto;
     grid-template-areas:
+        "header"
         "kcal-total"
         "menu"
         "history";
@@ -201,6 +203,14 @@ option:active {
 #total-kcal-today {
     font-size: 4em;
     margin: 0;
+}
+
+/* 
+* recent meals button styles
+*/ 
+#clear-meals-list {
+    display: block;
+    margin: 0 auto;
 }
 
 /* 
@@ -267,6 +277,9 @@ option:active {
         overflow: hidden;
     }
 
+    /*
+    * button styling
+    */
     button:hover {
         color: white;
         background-color: orange;
