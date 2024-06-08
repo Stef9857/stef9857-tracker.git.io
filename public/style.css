@@ -436,6 +436,12 @@ option:active {
         height: 100%;
     }
 
+    .select-instructions::before {
+        content: '(hold CTRL to select multiple)';
+        font-size: x-small;
+        vertical-align: middle;
+    }
+
     /*
     * recipe list styling
     */
