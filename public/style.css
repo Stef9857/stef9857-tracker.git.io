@@ -22,6 +22,13 @@ button {
     border-radius: 25px;
 }
 
+button.clearType {
+    border: 1px solid lightgrey;
+    padding: 7px 10px;
+    color: grey;
+    font-size: small;
+}
+
 /* used when either there are no recipes and/or no recipes in localStorage to visually show the button is not clickable */
 button:disabled {
     border-color: lightgray;
@@ -205,8 +212,8 @@ option:active {
 }
 
 /* 
-* recent meals button styles
-*/ 
+* centre recent meals button 
+*/
 #clear-meals-list {
     display: block;
     margin: 0 auto;
@@ -221,7 +228,8 @@ option:active {
 }
 
 /* category and select ingredients dropdown styling */
-#existing-ingredient-categories, #selected-ingredients {
+#existing-ingredient-categories,
+#selected-ingredients {
     border: 1px solid rgb(118, 118, 118);
     width: 80%;
     height: 50px;
@@ -241,7 +249,8 @@ option:active {
 * ingredient and recipe list styling 
 * restricts the length of the list div so that it does not create an infinite-length page 
 */
-.ingredients-list, .recipes-list {
+.ingredients-list,
+.recipes-list {
     overflow-y: auto;
     height: 10em;
     margin-bottom: 6px;
@@ -282,6 +291,12 @@ option:active {
     button:hover {
         color: white;
         background-color: orange;
+        cursor: pointer;
+    }
+
+    button.clearType:hover {
+        color: black;
+        background-color: lightgrey;
     }
 
     /* 

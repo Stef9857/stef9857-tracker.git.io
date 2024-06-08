@@ -63,6 +63,13 @@ function updateExistingCategories(category = null) {
         let existingCategoriesSelect = document.getElementById("existing-ingredient-categories");
         existingCategoriesSelect.innerHTML = "";
 
+        // default option value is blank, so this will fail validation if "ingredient-category" textbox is also blank
+        let option = document.createElement("option");
+        option.textContent = "Select category";
+        option.value = "";  // this will fail this select element when select is set with "required", ie, "ingredient-category" textbox is also blank
+        option.hidden = true; // not selectable
+        existingCategoriesSelect.appendChild(option)
+
         // populate dropdown
         existingCategories.forEach(category => {
             let option = document.createElement("option");
@@ -107,10 +114,16 @@ document.getElementById("ingredient-form").addEventListener("submit", (event) =>
     document.getElementById("ingredient-category").value = "";
     document.getElementById("ingredient-name").value = "";
     document.getElementById("ingredient-kcal-count").value = "";
+    resetExistingIngredientCategoriesSelection();
 
     updateIngredientsList(ingredient);
 });
 
+function resetExistingIngredientCategoriesSelection() {
+    let element = document.getElementById("existing-ingredient-categories");
+    element.required = true;
+    element.options.selectedIndex = 0;
+}
 
 // set up the functionality for clearing the ingredients and categories lists from localStorage 
 document.getElementById("clear-ingredients-list").addEventListener("click", () => {
@@ -130,12 +143,13 @@ function ingredientAsString(ingredient) {
     return "<strong>" + ingredient.ingredientName + "</strong>" + " (" + ingredient.ingredientKcalCount + " kcal) [" + ingredient.ingredientCategory + "]";
 }
 
-// function for updating the DOM with ingredients list (i.e. fill in the empty ul element)
-// code below adapted from the Countries of the World API exercise in Week 5
 function updateIngredientsList(ingredient = null) {
     // initialise empty ingredientsList or add the new ingredient
     if (!ingredientsList || ingredient) {
         ingredientsList = loadLocalStorageAndSync('ingredientsList', ingredient);
+        ingredientsList.sort((a, b) => {
+            return a.ingredientName.toLowerCase().localeCompare(b.ingredientName.toLowerCase());
+        });
     }
 
     // select the list element and clear it's content
@@ -215,6 +229,9 @@ function updateRecipesList(recipe = null) {
     // initialise empty recipesList or add the new recipe
     if (!recipesList || recipe) {
         recipesList = loadLocalStorageAndSync('recipesList', recipe);
+        recipesList.sort((a, b) => {
+            return a.recipeName.toLowerCase().localeCompare(b.recipeName.toLowerCase());
+        });
     }
 
     let listElement = document.querySelector(".recipes-list ul");
@@ -230,7 +247,6 @@ function updateRecipesList(recipe = null) {
     populateRecipesList();
 }
 
-// set up the functionality for clearing the recipes list from localStorage 
 document.getElementById("clear-recipes-list").addEventListener("click", () => {
     localStorage.removeItem('recipesList');
     recipesList = null;
@@ -330,7 +346,7 @@ function updateMealsList(meal = null) {
             listItem.innerHTML += "<div style='padding-top: 1px'>" + r + "</div>" + "<br>";
         });
         // add a separator once today's meals are all added
-        if (stillToday && meal.mealDate != currentDate) {
+        if (stillToday && meal.mealDate < currentDate) {
             stillToday = false;
             listItem.innerHTML = "<hr>" + listItem.innerHTML;
         }
@@ -375,12 +391,19 @@ function checkNameFormat(event) {
     return message;
 }
 
+// event listener checking name format and uniqueness against an existing list
 function checkNameFormatAndUniqueness(event, currentList) {
     let message = checkNameFormat(event);
     if (!message && currentList.includes(event.currentTarget.value)) {
         message = event.currentTarget.value + " is already used, choose another name";
     }
     event.currentTarget.setCustomValidity(message);
+}
+
+// "existing-ingredient-categories" and "ingredient-category" are mutually exclusive
+// dropdown value is required if there is nothing in the textbox (and vice verse)
+function setExistingCategoryRequired(value) {
+    document.getElementById("existing-ingredient-categories").required = (value == "");
 }
 
 /*
@@ -401,15 +424,20 @@ populateRecipesList();
 // setup tabs
 document.getElementById("tab-meal-div").addEventListener("click", clickTab);
 document.getElementById("tab-recipe-div").addEventListener("click", clickTab);
-document.getElementById("tab-ingredient-div").addEventListener("click", clickTab);
+document.getElementById("tab-ingredient-div").addEventListener("click", (event) => {
+    if (!document.getElementById("ingredient-name").value && !document.getElementById("ingredient-kcal-count").value && !document.getElementById("ingredient-category").value) {
+        resetExistingIngredientCategoriesSelection();
+    }
+    clickTab(event);
+});
 // select default tab
-if (ingredientsList.length == 0) {
-    document.getElementById("tab-ingredient-div").click();
-} else if (recipesList.length == 0) {
-    document.getElementById("tab-recipe-div").click();
-} else {
-    document.getElementById("tab-meal-div").click();
+let defaultTab = "tab-meal-div";
+if (!ingredientsList.length) {
+    defaultTab = "tab-ingredient-div";
+} else if (!recipesList.length) {
+    defaultTab = "tab-recipe-div";
 }
+document.getElementById(defaultTab).click();
 
 // add event listener for text inputs
 document.getElementById("meal-name").addEventListener("input", checkNameFormat);
@@ -421,8 +449,9 @@ document.getElementById("ingredient-name").addEventListener("input", (event) => 
 });
 document.getElementById("ingredient-category").addEventListener("input", (event) => {
     checkNameFormatAndUniqueness(event, existingCategories);
+    setExistingCategoryRequired(event.currentTarget.value);
 });
 
-// restrict fdates to be no newer than today
+// restrict dates to be no newer than today
 // https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
 document.getElementById("meal-date").setAttribute("max", getCurrentDate());
