@@ -13,7 +13,7 @@ function clickTab(event) {
     // Declare all variables
     let i, tabcontent, tablinks;
     // pattern for tabnam is "tab-" + formName, so take away first 4 characters to get formName
-    let formName = event.currentTarget.id.substring(4);
+    let divName = event.currentTarget.id.substring(4);
 
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -28,7 +28,7 @@ function clickTab(event) {
     }
 
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(formName).style.display = "block";
+    document.getElementById(divName).style.display = "block";
     event.currentTarget.className += " active";
 }
 
@@ -127,7 +127,7 @@ document.getElementById("clear-ingredients-list").addEventListener("click", () =
 });
 
 function ingredientAsString(ingredient) {
-    return ingredient.ingredientName + " - " + ingredient.ingredientKcalCount + " kcal [" + ingredient.ingredientCategory + "]";
+    return "<strong>" + ingredient.ingredientName + "</strong>" + " (" + ingredient.ingredientKcalCount + " kcal) [" + ingredient.ingredientCategory + "]";
 }
 
 // function for updating the DOM with ingredients list (i.e. fill in the empty ul element)
@@ -145,7 +145,7 @@ function updateIngredientsList(ingredient = null) {
     // Loop through the ingredients list and add their names as list items to the page
     ingredientsList.forEach((ingredient) => {
         let listItem = document.createElement("li");
-        listItem.textContent = ingredientAsString(ingredient);
+        listItem.innerHTML = ingredientAsString(ingredient);
         listItem.value = ingredient.ingredientName;
         list.appendChild(listItem);
     })
@@ -168,7 +168,7 @@ function populateIngredientsList() {
         document.getElementById("meal-form-submit").disabled = false;
         ingredientsList.forEach((ingredient) => {
             let option = document.createElement("option");
-            option.textContent = ingredientAsString(ingredient);
+            option.innerHTML = ingredientAsString(ingredient);
             option.value = ingredient.ingredientName;
             selectedIngredientsSelect.appendChild(option);
         });
@@ -222,7 +222,7 @@ function updateRecipesList(recipe = null) {
 
     recipesList.forEach((recipe) => {
         let listItem = document.createElement("li");
-        listItem.textContent = recipe.recipeName + ": " + recipe.ingredients.join(", ") + " - Total Calories: " + calcRecipeKcal(recipe.recipeName) + " kcal";
+        listItem.innerHTML = "<strong>" + recipe.recipeName + "</strong>" + ": " + recipe.ingredients.join(", ") + " (" + calcRecipeKcal(recipe.recipeName) + " kcal)";
         listItem.value = recipe.recipeName;
         listElement.appendChild(listItem);
     });
@@ -324,10 +324,10 @@ function updateMealsList(meal = null) {
     let currentDate = getCurrentDate();
     mealsList.forEach((meal) => {
         let listItem = document.createElement("li");
-        let totalKcalText = (meal.recipes.length == 0) ? totalKcalText : "Total KCal: " + calcMealKcal(meal) + " kcal"; // if there are no meals do not display kcal count
-        listItem.innerHTML = meal.mealName + ": " + meal.mealDate + " " + meal.mealTime + "&emsp;" + totalKcalText + "<br>";
+        let totalKcalText = (meal.recipes.length == 0) ? "" : "(" + calcMealKcal(meal) + " kcal)"; // if there are no meals do not display kcal count
+        listItem.innerHTML = "<strong>" + meal.mealName + "</strong>" + ": " + totalKcalText + "<div style='text-align: right; margin-right: 15px;'>" + meal.mealDate + " " + meal.mealTime + "</div>";
         meal.recipes.forEach(r => {
-            listItem.innerHTML += r + "<br>";
+            listItem.innerHTML += "<div style='padding-top: 1px'>" + r + "</div>" + "<br>";
         });
         // add a separator once today's meals are all added
         if (stillToday && meal.mealDate != currentDate) {
@@ -399,11 +399,17 @@ populateIngredientsList();
 populateRecipesList();
 
 // setup tabs
-document.getElementById("tab-meal-form").addEventListener("click", clickTab);
-document.getElementById("tab-recipe-form").addEventListener("click", clickTab);
-document.getElementById("tab-ingredients-form").addEventListener("click", clickTab);
+document.getElementById("tab-meal-div").addEventListener("click", clickTab);
+document.getElementById("tab-recipe-div").addEventListener("click", clickTab);
+document.getElementById("tab-ingredient-div").addEventListener("click", clickTab);
 // select default tab
-document.getElementById("tab-meal-form").click();
+if (ingredientsList.length == 0) {
+    document.getElementById("tab-ingredient-div").click();
+} else if (recipesList.length == 0) {
+    document.getElementById("tab-recipe-div").click();
+} else {
+    document.getElementById("tab-meal-div").click();
+}
 
 // add event listener for text inputs
 document.getElementById("meal-name").addEventListener("input", checkNameFormat);
@@ -416,3 +422,7 @@ document.getElementById("ingredient-name").addEventListener("input", (event) => 
 document.getElementById("ingredient-category").addEventListener("input", (event) => {
     checkNameFormatAndUniqueness(event, existingCategories);
 });
+
+// restrict fdates to be no newer than today
+// https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
+document.getElementById("meal-date").setAttribute("max", getCurrentDate());

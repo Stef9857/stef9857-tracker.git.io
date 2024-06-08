@@ -10,6 +10,10 @@
 
 <body>
     <div class="container">
+        <div class="header">
+
+        </div>
+
         <div class="kcal-total">
             <p class="kcal-title">Kilocalories&nbsp;consumed&nbsp;today</p>
             <h1 id="total-kcal-today">
@@ -29,49 +33,56 @@
 
         <div class="menu">
             <div class="tab">
-                <button class="tablinks" id="tab-meal-form">Add Meal</button>
-                <button class="tablinks" id="tab-recipe-form">Create Recipe</button>
-                <button class="tablinks" id="tab-ingredients-form">Create Ingredient</button>
+                <button class="tablinks" id="tab-meal-div">Add Meal</button>
+                <button class="tablinks" id="tab-recipe-div">Create Recipe</button>
+                <button class="tablinks" id="tab-ingredient-div">Create Ingredient</button>
             </div>
 
-            <div id="meal-form" class="tabcontent">
+            <div id="meal-div" class="tabcontent">
                 <h2>Add Meal</h2>
                 <form id="meal-form">
                     <!-- Meal name -->
                     <label for="meal-name">Meal Name</label><br>
                     <input type="text" id="meal-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required
-                        placeholder="Eg, Breakfast, Lunch, Dinner"><br>
-                    <!-- Date -->
-                    <label for="meal-date">Date</label><br>
-                    <input type="date" id="meal-date" required><br>
-                    <!-- Time -->
-                    <label for="meal-time">Time</label><br>
-                    <input type="time" id="meal-time" required><br>
+                        placeholder="E.g. Breakfast, Lunch, Dinner"><br>
+                    <div class="meal-date">
+                        <!-- Date -->
+                        <label for="meal-date">Date</label><br>
+                        <input type="date" id="meal-date" required><br>
+                    </div>
+                    <div class="meal-time">
+                        <!-- Time -->
+                        <label for="meal-time">Time</label><br>
+                        <input type="time" id="meal-time" required><br>
+                    </div>
                     <!-- Select recipes -->
                     <label for="selected-recipes">Select Recipes</label><br>
-                    <select id="selected-recipes" size="10" multiple required>
+                    <select id="selected-recipes" size="4" multiple required>
                         <!-- will be added dynamically -->
                     </select><br>
                     <button type="submit" id="meal-form-submit">Add Meal</button>
                 </form>
             </div>
 
-            <div id="recipe-form" class="tabcontent">
-                <h2>Create Recipe</h2>
-                <form id="recipe-form">
-                    <!-- Recipe name -->
-                    <label for="recipe-name">Recipe Name</label><br>
-                    <input type="text" id="recipe-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required><br>
-                    <!-- Select ingredients name -->
-                    <label for="selected-ingredients">Select Ingredients</label><br>
-                    <select id="selected-ingredients" size="10" multiple required>
-                        <!-- will be added dynamically -->
-                    </select><br>
+            <div id="recipe-div" class="tabcontent">
+                <div id="recipe-form-div">
+                    <h2>Create Recipe</h2>
+                    <form id="recipe-form">
+                        <!-- Recipe name -->
+                        <label for="recipe-name">Recipe Name</label><br>
+                        <input type="text" id="recipe-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required
+                            placeholder="Type recipe name here"><br>
+                        <!-- Select ingredients name -->
+                        <label for="selected-ingredients">Select Ingredients</label><br>
+                        <select id="selected-ingredients" size="8" multiple required>
+                            <!-- will be added dynamically -->
+                        </select><br>
 
-                    <button type="submit" id="recipe-form-submit">Create Recipe</button>
-                </form>
+                        <button type="submit" id="recipe-form-submit">Create Recipe</button>
+                    </form>
+                </div>
 
-                <div class="recipes-list-div">
+                <div id="recipes-list-div">
                     <h2>Recipes List</h2>
                     <div class="recipes-list">
                         <ul>
@@ -82,28 +93,37 @@
                 </div>
             </div>
 
-            <div id="ingredients-form" class="tabcontent">
-                <h2>Create Ingredient</h2>
-                <form id="ingredient-form">
-                    <!-- Ingredient name -->
-                    <label for="ingredient-name">Ingredient Name</label><br>
-                    <input type="text" id="ingredient-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required><br>
-                    <!-- Ingredient kcal count -->
-                    <label for="ingredient-kcal-count">Kcal count</label><br>
-                    <input type="number" id="ingredient-kcal-count" min="1" required><br>
-                    <!-- New ingredient category -->
-                    <label for="ingredient-category">Ingredient Category</label><br>
-                    <!-- Select from existing ingredient category -->
-                    <select id="existing-ingredient-categories">
-                        <!-- will be added dynamically -->
-                    </select>
-                    <input type="text" id="ingredient-category" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]"
-                        placeholder="New Category">
-                    <!-- Create button -->
-                    <button type="submit">Create</button>
-                </form>
+            <div id="ingredient-div" class="tabcontent">
+                <div id="ingredient-form-div">
+                    <h2>Create Ingredient</h2>
+                    <form id="ingredient-form">
+                        <div class="ingredient-name">
+                            <!-- Ingredient name -->
+                            <label for="ingredient-name">Ingredient Name</label><br>
+                            <input type="text" id="ingredient-name" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]" required
+                                placeholder="Type ingredient name here"><br>
+                        </div>
+                        <div class="ingredient-kcal-count">
+                            <!-- Ingredient kcal count -->
+                            <label for="ingredient-kcal-count">Kcal count</label><br>
+                            <input type="number" id="ingredient-kcal-count" min="1" required
+                                placeholder="Type number of kcals here"><br>
+                        </div>
+                        <!-- New ingredient category -->
+                        <label for="ingredient-category">Ingredient Category</label><br>
+                        <!-- Select from existing ingredient category -->
+                        <select id="existing-ingredient-categories">
+                            <!-- will be added dynamically -->
+                        </select>
+                        <p class="category-or"> OR </p><br>
+                        <input type="text" id="ingredient-category" pattern="[a-zA-Z][a-z A-Z]*[a-zA-Z]"
+                            placeholder="New Category"><br>
+                        <!-- Create button -->
+                        <button type="submit">Create</button>
+                    </form>
+                </div>
 
-                <div class="ingredients-list-div">
+                <div id="ingredients-list-div">
                     <h2>Ingredients List</h2>
                     <div class="ingredients-list">
                         <ul>
