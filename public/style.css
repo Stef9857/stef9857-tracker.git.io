@@ -15,7 +15,7 @@ body {
 button {
     background-color: white;
     color: black;
-    border: 2px solid orange;
+    border: 2px solid #f9b163;
     transition-duration: 0.4s;
     padding: 12px 15px;
     margin: 1% 0%;
@@ -38,7 +38,7 @@ button:disabled {
 
 /*
  * nav tabs 
- * https://www.w3schools.com/howto/howto_js_tabs.asp
+ * code adapted from W3Schools (n.d.b.)
  */
 .tab {
     overflow: hidden;
@@ -53,7 +53,7 @@ button:disabled {
 /* style the buttons that are used to open the tab content */
 .tab button {
     background-color: inherit;
-    border: 2px solid orange;
+    border: 2px solid #f9b163;
     padding: 20px 16px;
     transition: 0.3s;
     width: 28%;
@@ -66,8 +66,8 @@ button:disabled {
 
 /* create an active/current tablink class */
 .tab button.active {
-    background-color: darkorange;
-    border: 2px solid darkorange;
+    background-color: #F9A03F;
+    border: 2px solid #F9A03F;
 }
 
 /* style the tab content */
@@ -80,7 +80,7 @@ button:disabled {
 
 /* 
 * scrollbar styles
-* https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp 
+* adapted from W3Schools (n.d.a.)
 */
 
 /* width */
@@ -96,13 +96,13 @@ button:disabled {
 
 /* handle */
 ::-webkit-scrollbar-thumb {
-    background: orange;
+    background: #f9b163;
     border-radius: 10px;
 }
 
 /* handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: darkorange;
+    background: #F9A03F;
 }
 
 /* 
@@ -145,11 +145,11 @@ option {
 }
 
 option:active {
-    background-color: orange;
+    background-color: #f9b163;
 }
 
 /* 
-* grid layout
+* grid layout made with Layoutit! (n.d.).
 * one column layout since mobile screens are more suited for vertical information presentation
 */
 .container {
@@ -168,7 +168,7 @@ option:active {
 */
 .header {
     grid-area: header;
-    background-color: orange;
+    background-color: #f9b163;
 }
 
 .kcal-total {
@@ -289,8 +289,7 @@ option:active {
     * button styling
     */
     button:hover {
-        color: white;
-        background-color: orange;
+        background-color: #f9b163;
         cursor: pointer;
     }
 
@@ -301,6 +300,7 @@ option:active {
 
     /* 
     * nav tabs
+    * code adapted from W3Schools (n.d.b.)
     */
 
     /* Style the tab content - use the border to create the dividing line between the left and right of the page */
@@ -332,8 +332,8 @@ option:active {
 
     /* Change background color of buttons on hover */
     .tab button:hover {
-        background-color: orange;
-        border: 2px solid orange;
+        background-color: #f9b163;
+        border: 2px solid #f9b163;
         color: black;
     }
 
@@ -358,11 +358,11 @@ option:active {
     * hover and active states for selection options 
     */
     option:hover {
-        background-color: sandybrown;
+        background-color: #f9b163;
     }
 
     option:active {
-        background-color: orange;
+        background-color: #f9b163;
     }
 
     /* 

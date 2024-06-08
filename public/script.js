@@ -8,7 +8,7 @@ var mealsList = null;
  * navigation tabs in configuration section
  */
 
-// nav tabs https://www.w3schools.com/howto/howto_js_tabs.asp
+// nav tabs - code adapted from W3Schools (n.d.b.) 
 function clickTab(event) {
     // Declare all variables
     let i, tabcontent, tablinks;
@@ -91,7 +91,7 @@ document.getElementById("ingredient-form").addEventListener("submit", (event) =>
     let name = document.getElementById("ingredient-name").value;
     let kcalCountInput = document.getElementById("ingredient-kcal-count").value;
 
-    // https://www.w3schools.com/jsref/jsref_parsefloat.asp 
+    // code adapted from W3Schools (n.d.c.)
     // parseFloat used to ensure that the number is not treated as a string - necessary for kcal calculations later
     let kcalCount = parseFloat(kcalCountInput);
     // check if user added new category
@@ -317,7 +317,7 @@ function updateMealsList(meal = null) {
     if (!mealsList || meal) {
         mealsList = loadLocalStorageAndSync('mealsList', meal);
         mealsList.sort((a, b) => {
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+            // code from Mdn Web Docs (n.d.)
             // A negative value indicates that a should come before b.
             // A positive value indicates that a should come after b.
             // Zero or NaN indicates that a and b are considered equal.
@@ -348,7 +348,7 @@ function updateMealsList(meal = null) {
         // add a separator once today's meals are all added
         if (stillToday && meal.mealDate < currentDate) {
             stillToday = false;
-            listItem.innerHTML = "<hr>" + listItem.innerHTML;
+            listItem.innerHTML = "<hr style ='margin-bottom: 30px'>" + listItem.innerHTML;
         }
         listItem.value = meal.mealName;
         listElement.appendChild(listItem);
@@ -364,7 +364,7 @@ document.getElementById("clear-meals-list").addEventListener("click", () => {
 });
 
 function getCurrentDate() {
-    // https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+    // code from Darth Egregious (2015)
     let currentDate = new Date();
     let offset = currentDate.getTimezoneOffset();
     return new Date(currentDate.getTime() - (offset * 1000 * 60)).toISOString().split('T')[0];
@@ -398,12 +398,6 @@ function checkNameFormatAndUniqueness(event, currentList) {
         message = event.currentTarget.value + " is already used, choose another name";
     }
     event.currentTarget.setCustomValidity(message);
-}
-
-// "existing-ingredient-categories" and "ingredient-category" are mutually exclusive
-// dropdown value is required if there is nothing in the textbox (and vice verse)
-function setExistingCategoryRequired(value) {
-    document.getElementById("existing-ingredient-categories").required = (value == "");
 }
 
 /*
@@ -447,11 +441,26 @@ document.getElementById("recipe-name").addEventListener("input", (event) => {
 document.getElementById("ingredient-name").addEventListener("input", (event) => {
     checkNameFormatAndUniqueness(event, ingredientsList.map((ingredient) => ingredient.ingredientName));
 });
+
+// "ingredient-category" and "existing-ingredient-categories" are mutually exclusive
 document.getElementById("ingredient-category").addEventListener("input", (event) => {
     checkNameFormatAndUniqueness(event, existingCategories);
-    setExistingCategoryRequired(event.currentTarget.value);
+    let value = event.currentTarget.value;
+    // reset category dropdown if there is text in this textbox
+    if (value) {
+        resetExistingIngredientCategoriesSelection();
+    }
+    // dropdown value is required if there is nothing in the textbox (and vice verse)
+    document.getElementById("existing-ingredient-categories").required = (value == "");
 });
 
-// restrict dates to be no newer than today
-// https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
+// "existing-ingredient-categories" and "ingredient-category" are mutually exclusive
+document.getElementById("existing-ingredient-categories").addEventListener("change", (event) => {
+    // clear category textbox if a selection is made
+    if (event.currentTarget.options.selectedIndex) {
+        document.getElementById("ingredient-category").value = "";
+    }
+})
+
+// restrict dates to be no newer than today 
 document.getElementById("meal-date").setAttribute("max", getCurrentDate());
